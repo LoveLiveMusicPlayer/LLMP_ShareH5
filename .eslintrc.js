@@ -3,7 +3,11 @@ module.exports = {
     env: {
         node: true,
     },
-    extends: ['plugin:vue/vue3-essential', 'eslint:recommended', '@vue/typescript/recommended'],
+    extends: [
+        'plugin:vue/vue3-essential',
+        'eslint:recommended',
+        '@vue/typescript/recommended',
+    ],
     parserOptions: {
         ecmaVersion: 2020,
     },
@@ -15,5 +19,6 @@ module.exports = {
         '@typescript-eslint/no-non-null-assertion': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         'vue/multi-word-component-names': 'off',
+        '@typescript-eslint/no-unused-vars': 'off',
     },
 };

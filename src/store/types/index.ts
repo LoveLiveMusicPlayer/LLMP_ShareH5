@@ -4,6 +4,8 @@ export interface IMusicList {
     id: number;
 }
 
+// RootState里面有什么东西
 export interface IRootState {
+    cdCover: string;
     musicList: IMusicList[];
 }

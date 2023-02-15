@@ -3,6 +3,7 @@ import { IRootState } from './types';
 
 export default createStore<IRootState>({
     state: {
+        cdCover: '',
         musicList: [
             {
                 name: 'Snow halation',
@@ -28,6 +29,21 @@ export default createStore<IRootState>({
                 name: '無敵級ビリーバー',
                 singName: '虹咲学园学园偶像同好会',
                 id: 5,
+            },
+            {
+                name: '永遠の一瞬',
+                singName: '虹咲学园学园偶像同好会',
+                id: 6,
+            },
+            {
+                name: '始まりは君の空',
+                singName: 'Liella',
+                id: 7,
+            },
+            {
+                name: 'Tiny Stars',
+                singName: 'Liella',
+                id: 8,
             },
             {
                 name: '永遠の一瞬',
