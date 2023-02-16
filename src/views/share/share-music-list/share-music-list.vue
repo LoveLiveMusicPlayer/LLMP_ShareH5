@@ -2,7 +2,7 @@
     <div class="share-music-list">
         <div class="music-list">
             <template v-for="listItem in musicList" :key="listItem">
-                <router-link to="/play">
+                <router-link :to="{ path: 'play', query: listItem }">
                     <section class="list">
                         <img
                             :src="

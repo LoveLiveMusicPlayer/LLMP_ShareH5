@@ -4,25 +4,22 @@
         <article class="music">
             <div class="music-logo">
                 <img
-                    src="@/assets/images/cd-img/Aqours/未体験HORIZON.jpg"
+                    :src="
+                        require(`@/assets/images/cd-img/${$route.query.singName}/${$route.query.name}.jpg`)
+                    "
                     alt=""
                 />
             </div>
             <div class="music-text">
-                <p class="music-name">未体験HORIZON</p>
-                <p class="music-sing">Aqours</p>
+                <p class="music-name">{{ $route.query.name }}</p>
+                <p class="music-sing">{{ $route.query.singName }}</p>
                 <p class="music-time">二次元·2021.05.20</p>
             </div>
             <div class="music-control">
                 <div ref="control_bar" class="music-control-bar">
-                    <span
-                        ref="control_btn"
-                        @touchstart="control_btn_touchstart"
-                        @touchmove="control_btn_touchmove"
-                        @touchend="control_btn_touchend"
-                        class="control-btn"
-                        :style="{ left: differenceX + 'px' }"
-                    ></span>
+                    <span ref="control_btn" class="control-btn"></span>
+                    <span class="initial-time">0:00</span>
+                    <span class="final-time">3:45</span>
                 </div>
                 <el-button class="play-btn">
                     <svg
@@ -43,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
+import { defineComponent } from 'vue';
 import share_affix from '@/components/share-affix/share-affix.vue';
 
 export default defineComponent({
@@ -51,43 +48,7 @@ export default defineComponent({
         share_affix,
     },
     setup() {
-        const control_bar = ref<HTMLDivElement>();
-        const control_btn = ref<HTMLSpanElement>();
-
-        let differenceX = ref(0);
-        let startX: number,
-            moveX,
-            currentLeft = 0;
-        // maxMove = control_bar.value!.offsetWidth;
-
-        const control_btn_touchstart = (e: any) => {
-            startX = e.targetTouches[0].clientX;
-        };
-        const control_btn_touchmove = (e: any) => {
-            moveX = e.targetTouches[0].clientX;
-            differenceX.value = moveX - startX;
-            let lastPosition = differenceX.value + currentLeft;
-
-            if (lastPosition < 0) {
-                differenceX.value = 0;
-            }
-            // else if (lastPosition > maxMove) {
-            //     differenceX.value = maxMove;
-            // }
-        };
-        const control_btn_touchend = () => {
-            currentLeft = differenceX.value;
-            console.log(currentLeft);
-        };
-
-        return {
-            control_bar,
-            control_btn,
-            control_btn_touchstart,
-            control_btn_touchmove,
-            control_btn_touchend,
-            differenceX,
-        };
+        return {};
     },
 });
 </script>
@@ -152,6 +113,22 @@ export default defineComponent({
                 background: #f2f8ff;
                 box-shadow: -3px -3px 6px 0px #ffffff, 5px 3px 6px 0px #d3e0ec;
                 border-radius: 50%;
+            }
+
+            .initial-time,
+            .final-time {
+                bottom: -640%;
+                position: absolute;
+                font-size: 3.2vw;
+                color: #999999;
+                font-weight: 500;
+            }
+
+            .initial-time {
+                left: 0;
+            }
+            .final-time {
+                right: 0;
             }
         }
         .play-btn {
