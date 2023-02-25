@@ -2,7 +2,7 @@
     <div class="share-player">
         <article class="cd">
             <div class="cd-logo">
-                <img src="@/assets/images/me-logo.jpg" alt="" />
+                <img src="@/assets/images/oshit.jpg" alt="" />
             </div>
             <p class="cd-name">这是一个歌单的名称</p>
         </article>
