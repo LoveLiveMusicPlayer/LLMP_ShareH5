@@ -3,6 +3,7 @@ import { IRootState } from './types';
 
 export default createStore<IRootState>({
     state: {
+        isPlaying: false,
         cdCover: '',
         musicList: [
             {

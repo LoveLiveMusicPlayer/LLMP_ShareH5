@@ -2,31 +2,39 @@
     <div class="share-music-list">
         <div class="music-list">
             <template v-for="listItem in musicList" :key="listItem">
-                <router-link :to="{ path: 'play', query: listItem }">
-                    <section class="list">
-                        <img
-                            :src="
-                                require(`@/assets/images/cd-img/${listItem.singName}/${listItem.name}.jpg`)
-                            "
-                            alt=""
-                            class="list-img"
-                        />
-                        <div class="list-message">
-                            <h2 class="list-name">{{ listItem.name }}</h2>
-                            <p class="list-sing">{{ listItem.singName }}</p>
-                        </div>
-                    </section>
-                </router-link>
+                <!-- <router-link :to="{ path: 'play', query: listItem }"> -->
+                <section
+                    class="list"
+                    @click="handleListClick(listItem.name, listItem.singName)"
+                >
+                    <img
+                        :src="
+                            require(`@/assets/images/cd-img/${listItem.singName}/${listItem.name}.jpg`)
+                        "
+                        alt=""
+                        class="list-img"
+                    />
+                    <div class="list-message">
+                        <h2 class="list-name">{{ listItem.name }}</h2>
+                        <p class="list-sing">{{ listItem.singName }}</p>
+                    </div>
+                </section>
+                <!-- </router-link> -->
             </template>
         </div>
-        <el-button class="load-more" @click="handleLoadMore">
-            点击加载更多歌曲
-        </el-button>
+        <el-button class="load-more"> 点击加载更多歌曲 </el-button>
     </div>
+
+    <audio
+        ref="audioRef"
+        :src="require(`@/assets/audio/${musicInfo.name}.mp3`)"
+    >
+        <!-- <source :src="require(`@/assets/audio/${musicInfoName}.mp3`)" type="" /> -->
+    </audio>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref, reactive, nextTick } from 'vue';
 import { useStore } from 'vuex';
 
 export default defineComponent({
@@ -34,12 +42,45 @@ export default defineComponent({
         const store = useStore();
         const musicList = store.state.musicList;
 
-        const handleLoadMore = () => {
-            //
+        const audioRef = ref<HTMLAudioElement>();
+
+        const musicInfo = reactive({
+            name: musicList[0].name,
+            singName: musicList[0].singName,
+        });
+
+        const handleListClick = (name: string, singName: string) => {
+            if (musicInfo.name === name) {
+                audioRef.value!.pause();
+            } else {
+                musicInfo.name = name;
+                musicInfo.singName = singName;
+                nextTick(() => {
+                    if (store.state.isPlaying) {
+                        audioRef.value!.pause();
+                        setTimeout(() => {
+                            audioRef.value!.play();
+                        }, 500);
+                    }
+                    store.state.isPlaying = true;
+                    audioRef.value!.play();
+                });
+            }
+            console.log(musicInfo.name);
+
+            store.state.isPlaying = !store.state.isPlaying;
+            if (store.state.isPlaying) {
+                audioRef.value!.play();
+            } else {
+                audioRef.value!.pause();
+            }
         };
+
         return {
+            musicInfo,
             musicList,
-            handleLoadMore,
+            audioRef,
+            handleListClick,
         };
     },
 });

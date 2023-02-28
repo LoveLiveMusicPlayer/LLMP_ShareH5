@@ -9,19 +9,15 @@
         <el-affix :offset="60">
             <article class="player-bar">
                 <div class="bar-left">
-                    <el-button class="bar-play">
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            width="24"
-                            height="24"
-                        >
-                            <path fill="none" d="M0 0h24v24H0z" />
-                            <path
-                                d="M19.376 12.416L8.777 19.482A.5.5 0 0 1 8 19.066V4.934a.5.5 0 0 1 .777-.416l10.599 7.066a.5.5 0 0 1 0 .832z"
-                                fill="rgba(255,255,255,1)"
-                            />
-                        </svg>
+                    <el-button class="bar-play" @click="playBtnCLick">
+                        <img
+                            :src="
+                                store.state.isPlaying
+                                    ? `${require('@/assets/images/pause.svg')}`
+                                    : `${require('@/assets/images/play.svg')}`
+                            "
+                            alt=""
+                        />
                     </el-button>
                     <span class="bar-list-total">120首歌曲</span>
                 </div>
@@ -47,11 +43,17 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { useStore } from 'vuex';
 
 export default defineComponent({
     setup() {
         const meLogo = require('@/assets/images/me-logo.jpg');
-        return { meLogo };
+        const store = useStore();
+        const playBtnCLick = () => {
+            //
+        };
+
+        return { meLogo, store, playBtnCLick };
     },
 });
 </script>
@@ -107,7 +109,7 @@ export default defineComponent({
                 box-shadow: 5px 3px 6px 0px #d3e0ec, -3px -3px 6px 0px #ffffff;
                 border-radius: 20px;
 
-                svg {
+                img {
                     width: 4.5vw;
                 }
             }

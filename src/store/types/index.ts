@@ -8,4 +8,5 @@ export interface IMusicList {
 export interface IRootState {
     cdCover: string;
     musicList: IMusicList[];
+    isPlaying: boolean;
 }
