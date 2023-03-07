@@ -1,5 +1,11 @@
 import { createStore } from 'vuex';
 import { IRootState } from './types';
+import axios from 'axios';
+
+import {
+    getZhushenwudiMusicInfoAPI,
+    getZhushenwudiMusicUrlAPI,
+} from '@/constant/api';
 
 export default createStore<IRootState>({
     state: {
@@ -62,9 +68,35 @@ export default createStore<IRootState>({
                 id: 8,
             },
         ],
+        musicUrl: '',
+        musicInfo: [],
     },
     getters: {},
-    mutations: {},
-    actions: {},
+    mutations: {
+        changeMusicInfo(state, musicInfo: any) {
+            state.musicInfo = musicInfo;
+        },
+    },
+    actions: {
+        // * 请求音乐数据
+        async getMusicInfo({ commit, dispatch }, payload: any) {
+            const infoAPI = getZhushenwudiMusicInfoAPI(payload);
+            const res = await axios.get(infoAPI);
+            // console.log(res.data);
+
+            const songs = res.data.songs;
+            const musicInfo: any[] = [];
+            songs.forEach((song: any) => {
+                musicInfo.push({
+                    name: song.name,
+                    coverUrl: song.al.picUrl,
+                    artistName: song.ar[0].name,
+                });
+            });
+            // console.log(musicInfo);
+
+            commit('changeMusicInfo', musicInfo);
+        },
+    },
     modules: {},
 });

@@ -1,86 +1,80 @@
 <template>
     <div class="share-music-list">
         <div class="music-list">
-            <template v-for="listItem in musicList" :key="listItem">
-                <!-- <router-link :to="{ path: 'play', query: listItem }"> -->
-                <section
-                    class="list"
-                    @click="handleListClick(listItem.name, listItem.singName)"
-                >
-                    <img
-                        :src="
-                            require(`@/assets/images/cd-img/${listItem.singName}/${listItem.name}.jpg`)
-                        "
-                        alt=""
-                        class="list-img"
-                    />
+            <!-- <router-link :to="{ path: 'play', query: listItem }"> -->
+            <!-- </router-link> -->
+            <template v-for="musicItem in musicInfo" :key="musicItem.name">
+                <section class="list">
+                    <img :src="musicItem.coverUrl" alt="" class="list-img" />
                     <div class="list-message">
-                        <h2 class="list-name">{{ listItem.name }}</h2>
-                        <p class="list-sing">{{ listItem.singName }}</p>
+                        <h2 class="list-name">{{ musicItem.name }}</h2>
+                        <p class="list-sing">{{ musicItem.artistName }}</p>
                     </div>
                 </section>
-                <!-- </router-link> -->
             </template>
         </div>
         <el-button class="load-more"> 点击加载更多歌曲 </el-button>
     </div>
 
-    <audio
+    <!-- <audio
         ref="audioRef"
         :src="require(`@/assets/audio/${musicInfo.name}.mp3`)"
-    >
-        <!-- <source :src="require(`@/assets/audio/${musicInfoName}.mp3`)" type="" /> -->
-    </audio>
+    ></audio> -->
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, nextTick } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import { useStore } from 'vuex';
 
 export default defineComponent({
     setup() {
+        // 测试接口
+        const musicListId = [
+            26111145, 28768096, 1832849841, 469699072, 1834947914, 1988842994,
+            1988842994, 1875023978,
+        ];
         const store = useStore();
-        const musicList = store.state.musicList;
 
-        const audioRef = ref<HTMLAudioElement>();
+        const audioRef = ref<HTMLAudioElement>(); // audio 元素
 
-        const musicInfo = reactive({
-            name: musicList[0].name,
-            singName: musicList[0].singName,
-        });
+        // const handleListClick = (name: string, singName: string) => {
+        //     if (musicInfo.name === name) {
+        //         audioRef.value!.pause();
+        //     } else {
+        //         musicInfo.name = name;
+        //         musicInfo.singName = singName;
+        //         nextTick(() => {
+        //             if (store.state.isPlaying) {
+        //                 audioRef.value!.pause();
+        //                 setTimeout(() => {
+        //                     audioRef.value!.play();
+        //                 }, 500);
+        //             }
+        //             store.state.isPlaying = true;
+        //             audioRef.value!.play();
+        //         });
+        //     }
+        //     console.log(musicInfo.name);
 
-        const handleListClick = (name: string, singName: string) => {
-            if (musicInfo.name === name) {
-                audioRef.value!.pause();
-            } else {
-                musicInfo.name = name;
-                musicInfo.singName = singName;
-                nextTick(() => {
-                    if (store.state.isPlaying) {
-                        audioRef.value!.pause();
-                        setTimeout(() => {
-                            audioRef.value!.play();
-                        }, 500);
-                    }
-                    store.state.isPlaying = true;
-                    audioRef.value!.play();
-                });
-            }
-            console.log(musicInfo.name);
+        //     store.state.isPlaying = !store.state.isPlaying;
+        //     if (store.state.isPlaying) {
+        //         audioRef.value!.play();
+        //     } else {
+        //         audioRef.value!.pause();
+        //     }
+        // };
 
-            store.state.isPlaying = !store.state.isPlaying;
-            if (store.state.isPlaying) {
-                audioRef.value!.play();
-            } else {
-                audioRef.value!.pause();
-            }
-        };
+        // 调用vuex中的actions
+        store.dispatch('getMusicInfo', musicListId);
+
+        let musicInfo: any = [];
+        musicInfo = computed(() => store.state.musicInfo);
+        console.log(musicInfo);
 
         return {
             musicInfo,
-            musicList,
             audioRef,
-            handleListClick,
+            // handleListClick,
         };
     },
 });
