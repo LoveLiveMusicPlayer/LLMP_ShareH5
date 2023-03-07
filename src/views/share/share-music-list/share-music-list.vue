@@ -24,16 +24,17 @@
 
 <script lang="ts">
 import { defineComponent, ref, computed } from 'vue';
-import { useStore } from 'vuex';
+import { useStore } from '@/store';
 
 export default defineComponent({
     setup() {
+        const store = useStore();
+
         // 测试接口
         const musicListId = [
             26111145, 28768096, 1832849841, 469699072, 1834947914, 1988842994,
             1988842994, 1875023978,
         ];
-        const store = useStore();
 
         const audioRef = ref<HTMLAudioElement>(); // audio 元素
 
@@ -65,10 +66,10 @@ export default defineComponent({
         // };
 
         // 调用vuex中的actions
-        store.dispatch('getMusicInfo', musicListId);
+        // store.dispatch('getMusicInfo', musicListId);
 
-        let musicInfo: any = [];
-        musicInfo = computed(() => store.state.musicInfo);
+        store.getMusicInfo(musicListId);
+        const musicInfo = computed(() => store.musicInfo);
         console.log(musicInfo);
 
         return {

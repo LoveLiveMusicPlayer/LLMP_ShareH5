@@ -12,7 +12,7 @@
                     <el-button class="bar-play" @click="playBtnCLick">
                         <img
                             :src="
-                                store.state.isPlaying
+                                store.isPlaying
                                     ? `${require('@/assets/images/pause.svg')}`
                                     : `${require('@/assets/images/play.svg')}`
                             "
@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useStore } from 'vuex';
+import { useStore } from '@/store';
 
 export default defineComponent({
     setup() {

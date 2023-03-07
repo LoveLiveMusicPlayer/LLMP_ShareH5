@@ -1,16 +1,5 @@
-export interface IMusicList {
-    name: string;
-    singName: string;
-    id: number;
-}
-
-// interface musicInfo {
-//     musicName: string[];
-//     musicArtistName: string[];
-//     musicCoverUrl: string[];
-// }
-
-interface musicInfo {
+import { APISong } from './api';
+export interface IMusicInfo {
     name: string;
     coverUrl: string;
     artistName: string;
@@ -18,9 +7,9 @@ interface musicInfo {
 
 // RootState里面有什么东西
 export interface IRootState {
-    cdCover: string;
-    musicList: IMusicList[];
     isPlaying: boolean;
     musicUrl: string;
-    musicInfo: musicInfo[];
+    musicInfo: IMusicInfo[];
 }
+
+export { APISong };

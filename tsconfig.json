@@ -32,7 +32,9 @@
         },
         // 可以指定在项目中可以使用哪里库的类型(Proxy/Window/Document)
         "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
-        "resolveJsonModule": true
+        "resolveJsonModule": true,
+        // 禁用any
+        "noImplicitAny": true
     },
     "include": [
         "src/**/*.ts",
