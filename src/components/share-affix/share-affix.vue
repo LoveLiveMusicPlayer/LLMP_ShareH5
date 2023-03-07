@@ -11,7 +11,6 @@
         </el-affix>
     </div>
 </template>
-w
 
 <script lang="ts">
 import { defineComponent } from 'vue';
@@ -48,7 +47,7 @@ a {
         width: 100%;
         height: 16vw;
         padding: 0 3.2vw;
-        box-shadow: 5px 3px 6px 0px @box-shadow-bgc;
+        box-shadow: 5px 3px 6px 0 @box-shadow-bgc;
 
         .logo {
             width: 8.533vw;
