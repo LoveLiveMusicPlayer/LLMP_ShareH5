@@ -7,13 +7,13 @@ import {
 } from '@/constant/api';
 
 // * types
-import type { APISong, IMusicInfo, IRootState } from './types';
+import type { APISong, Datum, IMusicInfo, IRootState } from './types';
 
 export const useStore = defineStore('main', {
     state: (): IRootState => {
         return {
             isPlaying: false as boolean,
-            musicUrl: '' as string,
+            musicUrl: [] as string[],
             musicInfo: [] as IMusicInfo[],
         };
     },
@@ -22,7 +22,6 @@ export const useStore = defineStore('main', {
         async getMusicInfo(payload: number[]) {
             const infoAPI = getZhushenwudiMusicInfoAPI(payload);
             const res = await axios.get(infoAPI);
-            console.log(res.data);
 
             const songs = res.data.songs;
             const musicInfo: IMusicInfo[] = [];
@@ -35,6 +34,19 @@ export const useStore = defineStore('main', {
             });
 
             this.musicInfo = musicInfo;
+        },
+        // * 请求音乐播放链接
+        async getMusicUrl(payload: number[]) {
+            const urlAPI = getZhushenwudiMusicUrlAPI(payload);
+            const res = await axios.get(urlAPI);
+
+            const datas = res.data.data;
+            const musicUrl: string[] = [];
+            datas.forEach((data: Datum) => {
+                musicUrl.push(data.url);
+            });
+
+            this.musicUrl = musicUrl;
         },
     },
 });

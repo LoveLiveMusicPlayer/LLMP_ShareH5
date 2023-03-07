@@ -1,4 +1,5 @@
-import { APISong } from './api';
+import { APISong } from './API/info';
+import { Datum } from './API/url';
 export interface IMusicInfo {
     name: string;
     coverUrl: string;
@@ -8,8 +9,8 @@ export interface IMusicInfo {
 // RootState里面有什么东西
 export interface IRootState {
     isPlaying: boolean;
-    musicUrl: string;
+    musicUrl: string[];
     musicInfo: IMusicInfo[];
 }
 
-export { APISong };
+export { APISong, Datum };

@@ -16,10 +16,7 @@
         <el-button class="load-more"> 点击加载更多歌曲 </el-button>
     </div>
 
-    <!-- <audio
-        ref="audioRef"
-        :src="require(`@/assets/audio/${musicInfo.name}.mp3`)"
-    ></audio> -->
+    <audio ref="audioRef" :src="musicUrl[0]"></audio>
 </template>
 
 <script lang="ts">
@@ -69,12 +66,18 @@ export default defineComponent({
         // store.dispatch('getMusicInfo', musicListId);
 
         store.getMusicInfo(musicListId);
+        store.getMusicUrl(musicListId);
         const musicInfo = computed(() => store.musicInfo);
-        console.log(musicInfo);
+        const musicUrl = computed(() => store.musicUrl);
+
+        const play = () => {
+            //
+        };
 
         return {
             musicInfo,
             audioRef,
+            musicUrl,
             // handleListClick,
         };
     },
