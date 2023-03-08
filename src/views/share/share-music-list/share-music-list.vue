@@ -5,7 +5,7 @@
             <!-- </router-link> -->
             <template v-for="musicItem in musicInfo" :key="musicItem.name">
                 <section class="list">
-                    <img :src="musicItem.coverUrl" alt="" class="list-img" />
+                    <img :src="musicItem.coverUrl" alt="" class="list-img"/>
                     <div class="list-message">
                         <h2 class="list-name">{{ musicItem.name }}</h2>
                         <p class="list-sing">{{ musicItem.artistName }}</p>
@@ -13,15 +13,15 @@
                 </section>
             </template>
         </div>
-        <el-button class="load-more"> 点击加载更多歌曲 </el-button>
+        <el-button class="load-more"> 点击加载更多歌曲</el-button>
     </div>
 
     <audio ref="audioRef" :src="musicUrl[0]"></audio>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
-import { useStore } from '@/store';
+import {computed, defineComponent, ref} from 'vue';
+import {useStore} from '@/store/main';
 
 export default defineComponent({
     setup() {
@@ -66,9 +66,7 @@ export default defineComponent({
         // store.dispatch('getMusicInfo', musicListId);
 
         store.getMusicInfo(musicListId);
-        store.getMusicUrl(musicListId);
         const musicInfo = computed(() => store.musicInfo);
-        const musicUrl = computed(() => store.musicUrl);
 
         const play = () => {
             //
@@ -77,7 +75,6 @@ export default defineComponent({
         return {
             musicInfo,
             audioRef,
-            musicUrl,
             // handleListClick,
         };
     },
@@ -98,6 +95,7 @@ export default defineComponent({
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+
             .list-img {
                 width: 12.8vw;
                 height: 12.8vw;
@@ -110,12 +108,14 @@ export default defineComponent({
                     width: 100%;
                 }
             }
+
             .list-message {
                 .list-name {
                     font-size: 4vw;
                     font-weight: bold;
                     color: #333;
                 }
+
                 .list-sing {
                     color: #999;
                     font-size: 3.2vw;
@@ -123,6 +123,7 @@ export default defineComponent({
             }
         }
     }
+
     .load-more {
         margin-top: 5.333vw;
         margin-bottom: 50px;

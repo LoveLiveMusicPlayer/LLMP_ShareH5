@@ -7,7 +7,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {defineComponent} from 'vue';
 import share_affix from '@/components/share-affix/share-affix.vue';
 import share_player from './share-player/share-player.vue';
 import share_music_list from './share-music-list/share-music-list.vue';

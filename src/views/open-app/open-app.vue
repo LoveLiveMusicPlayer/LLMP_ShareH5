@@ -2,14 +2,14 @@
     <div class="open-app">
         <share_affix></share_affix>
         <div class="logo">
-            <img src="@/assets/images/svg_logo.svg" alt="" />
+            <img src="@/assets/images/svg_logo.svg" alt=""/>
         </div>
         <el-button class="download">立即下载</el-button>
     </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {defineComponent} from 'vue';
 import share_affix from '@/components/share-affix/share-affix.vue';
 
 export default defineComponent({
@@ -35,6 +35,7 @@ export default defineComponent({
         top: 45%;
         left: 50%;
         transform: translate(-50%, -50%);
+
         img {
             width: 100%;
         }
