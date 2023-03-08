@@ -1,8 +1,6 @@
 <template>
     <div class="share-music-list">
         <div class="music-list">
-            <!-- <router-link :to="{ path: 'play', query: listItem }"> -->
-            <!-- </router-link> -->
             <template v-for="musicItem in musicInfo" :key="musicItem.name">
                 <section class="list" @click="play">
                     <img :src="musicItem.coverUrl" alt="" class="list-img" />
@@ -16,7 +14,7 @@
         <el-button class="load-more"> 点击加载更多歌曲 </el-button>
     </div>
 
-    <!-- <audio ref="audioRef" :src="musicUrl[playCurrentIndex]"></audio> -->
+    <audio ref="audioRef" :src="musicInfo[playCurrentIndex].url"></audio>
 </template>
 
 <script lang="ts">
@@ -24,9 +22,11 @@ import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import { useStore } from '@/store/main';
 
 export default defineComponent({
+    name: 'share-music-list',
     setup() {
         const store = useStore();
         const audioRef = ref<HTMLAudioElement>(); // audio 元素
+        store.isPlaying = false;
 
         // 测试接口
         const musicListId = [
@@ -34,34 +34,40 @@ export default defineComponent({
             1988842994, 1875023978,
         ];
 
+        // 发送网络请求获取音乐数据
+        store.getMusicInfo(musicListId);
+        const musicInfo = computed(() => store.musicInfo);
+
         onMounted(() => {
             audioRef.value!.addEventListener('ended', () => {
                 console.log('一首歌播放完成');
                 audioRef.value!.pause();
                 playCurrentIndex.value++;
-                // if (playCurrentIndex.value >= musicUrl.value.length) {
-                //     playCurrentIndex.value = 0;
-                // }
-                // audioRef.value!.src = musicUrl.value[playCurrentIndex.value];
+                if (playCurrentIndex.value >= musicInfo.value.length) {
+                    playCurrentIndex.value = 0;
+                }
+                audioRef.value!.src =
+                    musicInfo.value[playCurrentIndex.value].url;
                 setTimeout(() => {
+                    console.log(111);
                     audioRef.value!.play();
-                }, 500);
+                }, 100);
             });
 
-            if (store.isPlaying) {
-                audioRef.value!.play();
-            } else {
-                audioRef.value!.pause();
-            }
+            watch(
+                () => store.isPlaying,
+                (newValue, oldValue) => {
+                    console.log('newValue:', newValue, 'oldValue:', oldValue);
+                    store.isPlaying
+                        ? audioRef.value!.play()
+                        : audioRef.value!.pause();
+                },
+            );
         });
 
         store.$subscribe((mutation, state) => {
             // musicInfo.value = state.musicInfo;
         });
-
-        // 发送网络请求获取音乐数据
-        store.getMusicInfo(musicListId);
-        const musicInfo = computed(() => store.musicInfo);
 
         const playCurrentIndex = ref(0);
 

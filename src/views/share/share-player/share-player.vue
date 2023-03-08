@@ -10,14 +10,16 @@
             <article class="player-bar">
                 <div class="bar-left">
                     <el-button class="bar-play" @click="playBtnClick">
-                        <img
-                            :src="
-                                store.isPlaying
-                                    ? `${require('@/assets/images/pause.svg')}`
-                                    : `${require('@/assets/images/play.svg')}`
-                            "
-                            alt=""
-                        />
+                        <div class="bar-play-div">
+                            <img
+                                :src="
+                                    store.isPlaying
+                                        ? `${require('@/assets/images/pause.svg')}`
+                                        : `${require('@/assets/images/play.svg')}`
+                                "
+                                alt=""
+                            />
+                        </div>
                     </el-button>
                     <span class="bar-list-total">120首歌曲</span>
                 </div>
@@ -46,14 +48,20 @@ import { defineComponent } from 'vue';
 import { useStore } from '@/store/main';
 
 export default defineComponent({
+    name: 'share-player',
     setup() {
         const meLogo = require('@/assets/images/me-logo.jpg');
         const store = useStore();
+
         const playBtnClick = () => {
             store.isPlaying = !store.isPlaying;
         };
 
-        return { meLogo, store, playBtnClick };
+        return {
+            meLogo,
+            store,
+            playBtnClick,
+        };
     },
 });
 </script>
@@ -109,9 +117,15 @@ export default defineComponent({
                 background: linear-gradient(270deg, #f940a7 0%, #ff86c9 100%);
                 box-shadow: 5px 3px 6px 0px #d3e0ec, -3px -3px 6px 0px #ffffff;
                 border-radius: 20px;
+                overflow: hidden;
 
-                img {
-                    width: 4.5vw;
+                .bar-play-div {
+                    text-indent: -80px;
+                    img {
+                        width: 4.5vw;
+                        filter: drop-shadow(40px 0px #fff);
+                        // --webket-filter: ;
+                    }
                 }
             }
 
