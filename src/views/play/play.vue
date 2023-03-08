@@ -3,16 +3,16 @@
         <share_affix></share_affix>
         <article class="music">
             <div class="music-logo">
-                <img
+                <!-- <img
                     :src="
                         require(`@/assets/images/cd-img/${$route.query.singName}/${$route.query.name}.jpg`)
                     "
                     alt=""
-                />
+                /> -->
             </div>
             <div class="music-text">
-                <p class="music-name">{{ $route.query.name }}</p>
-                <p class="music-sing">{{ $route.query.singName }}</p>
+                <!-- <p class="music-name">{{ $route.query.name }}</p> -->
+                <!-- <p class="music-sing">{{ $route.query.singName }}</p> -->
                 <p class="music-time">二次元·2021.05.20</p>
             </div>
             <div class="music-control">
