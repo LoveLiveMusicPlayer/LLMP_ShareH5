@@ -1,52 +1,13 @@
-import { defineStore } from 'pinia';
-import axios from 'axios';
+import {createPinia} from "pinia"
+import {createPersistedState} from "pinia-plugin-persistedstate"
 
-import {
-    getZhushenwudiMusicInfoAPI,
-    getZhushenwudiMusicUrlAPI,
-} from '@/constant/api';
+const store = createPinia()
+// 状态持久化-插件配置
+store.use(createPersistedState({
+    serializer: {   // 指定参数序列化器
+        serialize: JSON.stringify,
+        deserialize: JSON.parse
+    }
+}))
 
-// * types
-import type { APISong, Datum, IMusicInfo, IRootState } from './types';
-
-export const useStore = defineStore('main', {
-    state: (): IRootState => {
-        return {
-            isPlaying: false as boolean,
-            musicUrl: [] as string[],
-            musicInfo: [] as IMusicInfo[],
-        };
-    },
-    actions: {
-        // * 请求歌单列表数据
-        async getMusicInfo(payload: number[]) {
-            const infoAPI = getZhushenwudiMusicInfoAPI(payload);
-            const res = await axios.get(infoAPI);
-
-            const songs = res.data.songs;
-            const musicInfo: IMusicInfo[] = [];
-            songs.forEach((song: APISong) => {
-                musicInfo.push({
-                    name: song.name,
-                    coverUrl: song.al.picUrl,
-                    artistName: song.ar[0].name,
-                });
-            });
-
-            this.musicInfo = musicInfo;
-        },
-        // * 请求音乐播放链接
-        async getMusicUrl(payload: number[]) {
-            const urlAPI = getZhushenwudiMusicUrlAPI(payload);
-            const res = await axios.get(urlAPI);
-
-            const datas = res.data.data;
-            const musicUrl: string[] = [];
-            datas.forEach((data: Datum) => {
-                musicUrl.push(data.url);
-            });
-
-            this.musicUrl = musicUrl;
-        },
-    },
-});
+export default store

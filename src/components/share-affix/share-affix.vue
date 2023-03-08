@@ -13,7 +13,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import {defineComponent} from 'vue';
 
 export default defineComponent({
     name: 'share-affix',
@@ -31,6 +31,7 @@ a {
     &:active {
         color: skyblue;
     }
+
     &:visited {
         color: #333;
     }
@@ -54,8 +55,8 @@ a {
             height: 8.533vw;
             margin-right: 3.2vw;
             border-radius: 8px;
-            background: #ffffff url('@/assets/images/svg_logo.svg') no-repeat
-                center center / 100%;
+            background: #ffffff url('@/assets/images/svg_logo.svg') no-repeat center center / 100%;
+
             img {
                 width: 100%;
             }
@@ -75,7 +76,7 @@ a {
             font-weight: bold;
             background: #f2f8ff;
             box-shadow: -3px -3px 6px 0px #ffffff,
-                5px 3px 6px 0px @box-shadow-bgc;
+            5px 3px 6px 0px @box-shadow-bgc;
             border-radius: 21px;
         }
     }

@@ -43,7 +43,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useStore } from '@/store';
+import { useStore } from '@/store/main';
 
 export default defineComponent({
     setup() {
@@ -102,6 +102,7 @@ export default defineComponent({
         .bar-left {
             display: flex;
             align-items: center;
+
             .bar-play {
                 width: 14.933vw;
                 height: 6.4vw;
@@ -113,6 +114,7 @@ export default defineComponent({
                     width: 4.5vw;
                 }
             }
+
             .bar-list-total {
                 color: #333;
                 font-size: 3.5vw;
@@ -129,6 +131,7 @@ export default defineComponent({
                 width: 4.5vw;
                 margin-right: 0.2vw;
             }
+
             span {
                 color: #999;
                 font-size: 3.5vw;

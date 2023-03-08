@@ -1,10 +1,13 @@
-import { createRouter, createWebHashHistory } from 'vue-router';
-import { RouteRecordRaw } from 'vue-router';
+import {createRouter, createWebHashHistory, RouteRecordRaw} from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
-        redirect: '/share',
+        redirect: '/jumper',
+    },
+    {
+        path: '/jumper',
+        component: () => import('@/views/jumper/jumper.vue')
     },
     {
         path: '/share',

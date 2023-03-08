@@ -1,8 +1,8 @@
-import type { App } from 'vue';
+import type {App} from 'vue';
 
 import 'element-plus/theme-chalk/index.css';
 
-import { ElButton, ElAffix, ElCol } from 'element-plus';
+import {ElAffix, ElButton, ElCol} from 'element-plus';
 
 const components = [ElButton, ElAffix, ElCol];
 

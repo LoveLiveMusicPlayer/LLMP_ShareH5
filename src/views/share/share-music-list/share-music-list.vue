@@ -4,7 +4,7 @@
             <!-- <router-link :to="{ path: 'play', query: listItem }"> -->
             <!-- </router-link> -->
             <template v-for="musicItem in musicInfo" :key="musicItem.name">
-                <section class="list">
+                <section class="list" @click="play">
                     <img :src="musicItem.coverUrl" alt="" class="list-img" />
                     <div class="list-message">
                         <h2 class="list-name">{{ musicItem.name }}</h2>
@@ -16,12 +16,12 @@
         <el-button class="load-more"> 点击加载更多歌曲 </el-button>
     </div>
 
-    <audio ref="audioRef" :src="musicUrl[playCurrentIndex]"></audio>
+    <!-- <audio ref="audioRef" :src="musicUrl[playCurrentIndex]"></audio> -->
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted, watch } from 'vue';
-import { useStore } from '@/store';
+import { useStore } from '@/store/main';
 
 export default defineComponent({
     setup() {
@@ -39,41 +39,41 @@ export default defineComponent({
                 console.log('一首歌播放完成');
                 audioRef.value!.pause();
                 playCurrentIndex.value++;
-                if (playCurrentIndex.value >= musicUrl.value.length) {
-                    playCurrentIndex.value = 0;
-                }
-                audioRef.value!.src = musicUrl.value[playCurrentIndex.value];
+                // if (playCurrentIndex.value >= musicUrl.value.length) {
+                //     playCurrentIndex.value = 0;
+                // }
+                // audioRef.value!.src = musicUrl.value[playCurrentIndex.value];
                 setTimeout(() => {
                     audioRef.value!.play();
                 }, 500);
             });
 
-            watch(
-                () => store.isPlaying,
-                (newValue, oldValue) => {
-                    console.log('newValue:', newValue, 'oldValue:', oldValue);
-                    if (newValue) {
-                        audioRef.value!.play();
-                    } else {
-                        audioRef.value!.pause();
-                    }
-                },
-            );
+            if (store.isPlaying) {
+                audioRef.value!.play();
+            } else {
+                audioRef.value!.pause();
+            }
+        });
+
+        store.$subscribe((mutation, state) => {
+            // musicInfo.value = state.musicInfo;
         });
 
         // 发送网络请求获取音乐数据
         store.getMusicInfo(musicListId);
-        store.getMusicUrl(musicListId);
         const musicInfo = computed(() => store.musicInfo);
-        const musicUrl = computed(() => store.musicUrl);
 
         const playCurrentIndex = ref(0);
-        // audioRef.value!.src = musicUrl[playCurrentIndex.value];
+
+        const play = () => {
+            console.log('开始播放');
+            audioRef.value!.play();
+        };
 
         return {
             musicInfo,
             audioRef,
-            musicUrl,
+            play,
             playCurrentIndex,
             // handleListClick,
         };

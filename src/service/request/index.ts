@@ -1,3 +1,4 @@
-class XRRequest {}
+class XRRequest {
+}
 
 export default XRRequest;
