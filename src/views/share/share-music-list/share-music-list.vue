@@ -4,7 +4,7 @@
             <!-- <router-link :to="{ path: 'play', query: listItem }"> -->
             <!-- </router-link> -->
             <template v-for="musicItem in musicInfo" :key="musicItem.name">
-                <section class="list" @click="play">
+                <section class="list">
                     <img :src="musicItem.coverUrl" alt="" class="list-img" />
                     <div class="list-message">
                         <h2 class="list-name">{{ musicItem.name }}</h2>
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
+import { defineComponent, ref, computed, onMounted, watch } from 'vue';
 import { useStore } from '@/store';
 
 export default defineComponent({
@@ -47,38 +47,21 @@ export default defineComponent({
                     audioRef.value!.play();
                 }, 500);
             });
+
+            watch(
+                () => store.isPlaying,
+                (newValue, oldValue) => {
+                    console.log('newValue:', newValue, 'oldValue:', oldValue);
+                    if (newValue) {
+                        audioRef.value!.play();
+                    } else {
+                        audioRef.value!.pause();
+                    }
+                },
+            );
         });
 
-        // const handleListClick = (name: string, singName: string) => {
-        //     if (musicInfo.name === name) {
-        //         audioRef.value!.pause();
-        //     } else {
-        //         musicInfo.name = name;
-        //         musicInfo.singName = singName;
-        //         nextTick(() => {
-        //             if (store.state.isPlaying) {
-        //                 audioRef.value!.pause();
-        //                 setTimeout(() => {
-        //                     audioRef.value!.play();
-        //                 }, 500);
-        //             }
-        //             store.state.isPlaying = true;
-        //             audioRef.value!.play();
-        //         });
-        //     }
-        //     console.log(musicInfo.name);
-
-        //     store.state.isPlaying = !store.state.isPlaying;
-        //     if (store.state.isPlaying) {
-        //         audioRef.value!.play();
-        //     } else {
-        //         audioRef.value!.pause();
-        //     }
-        // };
-
-        // 调用vuex中的actions
-        // store.dispatch('getMusicInfo', musicListId);
-
+        // 发送网络请求获取音乐数据
         store.getMusicInfo(musicListId);
         store.getMusicUrl(musicListId);
         const musicInfo = computed(() => store.musicInfo);
@@ -87,16 +70,10 @@ export default defineComponent({
         const playCurrentIndex = ref(0);
         // audioRef.value!.src = musicUrl[playCurrentIndex.value];
 
-        const play = () => {
-            console.log('开始播放');
-            audioRef.value!.play();
-        };
-
         return {
             musicInfo,
             audioRef,
             musicUrl,
-            play,
             playCurrentIndex,
             // handleListClick,
         };

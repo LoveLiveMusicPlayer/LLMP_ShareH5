@@ -9,7 +9,7 @@
         <el-affix :offset="60">
             <article class="player-bar">
                 <div class="bar-left">
-                    <el-button class="bar-play" @click="playBtnCLick">
+                    <el-button class="bar-play" @click="playBtnClick">
                         <img
                             :src="
                                 store.isPlaying
@@ -49,11 +49,11 @@ export default defineComponent({
     setup() {
         const meLogo = require('@/assets/images/me-logo.jpg');
         const store = useStore();
-        const playBtnCLick = () => {
-            //
+        const playBtnClick = () => {
+            store.isPlaying = !store.isPlaying;
         };
 
-        return { meLogo, store, playBtnCLick };
+        return { meLogo, store, playBtnClick };
     },
 });
 </script>
