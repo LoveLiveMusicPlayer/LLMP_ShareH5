@@ -16,16 +16,19 @@
         <el-button class="load-more"> 点击加载更多歌曲 </el-button>
     </div>
 
-    <audio ref="audioRef" :src="musicUrl[playCurrentIndex]"></audio>
+    <audio ref="audioRef" :src="musicInfo[playCurrentIndex].url"></audio>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
-import { useStore } from '@/store';
+import { defineComponent, ref, onMounted } from 'vue';
+import {useStore} from "@/store/main";
+import { storeToRefs } from 'pinia';
+
+let store = useStore()
+let {musicInfo} = storeToRefs(store)
 
 export default defineComponent({
     setup() {
-        const store = useStore();
         const audioRef = ref<HTMLAudioElement>(); // audio 元素
 
         // 测试接口
@@ -39,10 +42,10 @@ export default defineComponent({
                 console.log('一首歌播放完成');
                 audioRef.value!.pause();
                 playCurrentIndex.value++;
-                if (playCurrentIndex.value >= musicUrl.value.length) {
+                if (playCurrentIndex.value >= musicInfo.value!.length) {
                     playCurrentIndex.value = 0;
                 }
-                audioRef.value!.src = musicUrl.value[playCurrentIndex.value];
+                audioRef.value!.src = musicInfo.value![playCurrentIndex.value].url;
                 setTimeout(() => {
                     audioRef.value!.play();
                 }, 500);
@@ -79,8 +82,11 @@ export default defineComponent({
         // 调用vuex中的actions
         // store.dispatch('getMusicInfo', musicListId);
 
+        store.$subscribe((mutation, state) => {
+            musicInfo.value = state.musicInfo
+        })
+
         store.getMusicInfo(musicListId);
-        const musicInfo = computed(() => store.musicInfo);
 
         const playCurrentIndex = ref(0);
         // audioRef.value!.src = musicUrl[playCurrentIndex.value];
@@ -93,7 +99,6 @@ export default defineComponent({
         return {
             musicInfo,
             audioRef,
-            musicUrl,
             play,
             playCurrentIndex,
             // handleListClick,
