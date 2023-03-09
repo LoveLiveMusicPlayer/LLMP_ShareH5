@@ -1,55 +1,53 @@
 <template>
     <div class="jumper">
         <div class="logo">
-            <img src="@/assets/images/svg_logo.svg" alt=""/>
+            <img src="@/assets/images/svg_logo.svg" alt="" />
         </div>
     </div>
 </template>
 
-
 <script lang="ts">
-import router from '@/router'
-import urlParse from '@/utils/urlParse'
-import {useStore} from "@/store/main";
+import router from '@/router';
+import urlParse from '@/utils/urlParse';
+import { useStore } from '@/store/main';
 
 /* eslint-disable */
 export default {
-    name: "jumper",
+    name: 'jumper',
     setup() {
         const store = useStore();
-        const type = urlParse.getUrlKey("type")
-        const data = urlParse.getUrlKey("data")
+        const type = urlParse.getUrlKey('type');
+        const data = urlParse.getUrlKey('data');
 
         switch (type) {
-            case "1":
+            case '1':
                 if (data.length == 0) {
-                    jumpToOpen()
-                    return
+                    jumpToOpen();
+                    return;
                 }
-                store.savePlayInfo(data)
-                router.replace('/play')
-                break
-            case "2":
+                store.savePlayInfo(data);
+                router.replace('/play');
+                break;
+            case '2':
                 if (data.length == 0) {
-                    jumpToOpen()
-                    return
+                    jumpToOpen();
+                    return;
                 }
-                store.saveShareInfo(data)
-                router.replace('/share')
-                break
+                store.saveShareInfo(data);
+                router.replace('/share');
+                break;
             default:
-                jumpToOpen()
-                break
+                jumpToOpen();
+                break;
         }
 
         return {};
-    }
-}
+    },
+};
 
 function jumpToOpen() {
-    router.replace('/open-app')
+    router.replace('/open-app');
 }
-
 </script>
 
 <style scoped lang="less">

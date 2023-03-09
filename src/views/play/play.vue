@@ -4,7 +4,13 @@
         <article class="music">
             <div class="music-logo">
                 <img
-                    :src="(info && info.coverUrl && info.coverUrl.toString().length > 0) ? info.coverUrl : require(`@/assets/images/svg_logo.svg`)"
+                    :src="
+                        info &&
+                        info.coverUrl &&
+                        info.coverUrl.toString().length > 0
+                            ? info.coverUrl
+                            : require(`@/assets/images/svg_logo.svg`)
+                    "
                     alt=""
                 />
             </div>
@@ -13,8 +19,15 @@
                 <p class="music-sing">{{ info && info.artistName }}</p>
             </div>
             <div class="music-control">
-                <div ref="control_bar" class="music-control-bar">
-                    <span ref="btnControl" class="control-btn"></span>
+                <div ref="controlBar" class="music-control-bar">
+                    <span
+                        ref="btnControl"
+                        class="control-btn"
+                        :style="{ left: String(differenceX + 'px') }"
+                        @touchstart="control_btn_touchstart"
+                        @touchmove="control_btn_touchmove"
+                        @touchend="control_btn_touchend"
+                    ></span>
                     <span class="initial-time">{{ duration }}</span>
                     <span class="final-time">{{ info && info.calTime }}</span>
                 </div>
@@ -30,20 +43,20 @@
                 </el-button>
             </div>
         </article>
-        <audio ref="audioRef"/>
+        <audio ref="audioRef" />
     </div>
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue';
-import {storeToRefs} from 'pinia'
+import { defineComponent, ref, Ref } from 'vue';
+import { storeToRefs } from 'pinia';
 import share_affix from '@/components/share-affix/share-affix.vue';
-import {useStore} from "@/store/main";
-import {IMusicInfo} from "@/store/types";
-import timeUtil from "@/utils/timeUtil";
+import { useStore } from '@/store/main';
+import { IMusicInfo } from '@/store/types';
+import timeUtil from '@/utils/timeUtil';
 
-let store = useStore()
-let {playInfo, musicInfo} = storeToRefs(store)
+let store = useStore();
+let { playInfo, musicInfo } = storeToRefs(store);
 
 /* eslint-disable */
 let timeListener: EventListenerOrEventListenerObject;
@@ -54,10 +67,35 @@ export default defineComponent({
     },
     setup() {
         const isPlaying = ref(false);
-        const info = ref<IMusicInfo>()
-        const duration = ref("00:00")
+        const info = ref<IMusicInfo>();
+        const duration = ref('00:00');
         const audioRef = ref<HTMLAudioElement>();
         const btnControl = ref<HTMLSpanElement>();
+        const controlBar = ref<HTMLDivElement>();
+
+        const differenceX = ref(0);
+        let startX: number,
+            moveX,
+            currentLeft = 0;
+        // maxMove = controlBar.value!.clientHeight;
+
+        // console.log(maxMove);
+
+        const control_btn_touchstart = (e: any) => {
+            startX = e.targetTouches[0].clientX;
+        };
+        const control_btn_touchmove = (e: any) => {
+            moveX = e.targetTouches[0].clientX;
+            differenceX.value = moveX - startX + currentLeft;
+            const lastPosition = differenceX.value + currentLeft;
+
+            if (lastPosition < 0) {
+                differenceX.value = 0;
+            }
+        };
+        const control_btn_touchend = () => {
+            currentLeft = differenceX.value;
+        };
 
         const playBtnClick = () => {
             isPlaying.value = !isPlaying.value;
@@ -69,17 +107,34 @@ export default defineComponent({
         };
 
         timeListener = function (res) {
-            const current = res.timeStamp
-            const total = info.value!.time
-            duration.value = timeUtil.millisecondToTime(current > total ? total : current)
-            btnControl.value!.style.left = timeUtil.musicControlLeftMargin(current, total)
-        }
+            const current = res.timeStamp;
+            const total = info.value!.time;
+            duration.value = timeUtil.millisecondToTime(
+                current > total ? total : current,
+            );
+            btnControl.value!.style.left = timeUtil.musicControlLeftMargin(
+                current,
+                total,
+            );
+        };
 
         store.$subscribe((mutation, state) => {
-            info.value = state.musicInfo[0]
-        })
+            info.value = state.musicInfo[0];
+        });
 
-        return {audioRef, playBtnClick, isPlaying, info, duration, btnControl};
+        return {
+            audioRef,
+            playBtnClick,
+            isPlaying,
+            info,
+            duration,
+            btnControl,
+            controlBar,
+            differenceX,
+            control_btn_touchstart,
+            control_btn_touchmove,
+            control_btn_touchend,
+        };
     },
 
     unmounted() {
@@ -87,13 +142,13 @@ export default defineComponent({
     },
 
     async mounted() {
-        this.audioRef?.addEventListener('timeupdate', timeListener, false)
-        const info = JSON.parse(playInfo.value)
-        await store.getMusicInfo([info.neteaseId])
+        this.audioRef?.addEventListener('timeupdate', timeListener, false);
+        const info = JSON.parse(playInfo.value);
+        await store.getMusicInfo([info.neteaseId]);
         if (this.audioRef != null) {
-            this.audioRef.src = musicInfo.value[0].url
+            this.audioRef.src = musicInfo.value[0].url;
         }
-    }
+    },
 });
 </script>
 
