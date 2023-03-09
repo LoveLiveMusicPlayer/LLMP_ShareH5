@@ -4,8 +4,8 @@
             <header class="affix-header">
                 <span class="logo"></span>
                 <span class="text">更多有趣的歌尽在LLMP</span>
-                <el-button class="button">
-                    <router-link to="/open-app">打开LLMP</router-link>
+                <el-button class="button" @click="openApp">
+                    打开LLMP
                 </el-button>
             </header>
         </el-affix>
@@ -14,11 +14,24 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
+import appUtil from "@/utils/appUtil";
+import {storeToRefs} from 'pinia'
+import {useStore} from "@/store/main";
+import router from "@/router";
+
+let store = useStore()
+let {isAndroid} = storeToRefs(store)
 
 export default defineComponent({
     name: 'share-affix',
     setup() {
-        return {};
+        function openApp() {
+            window.location.href = "llmp://top.zhushenwudi?musicName=%E5%A0%95%E5%A4%A9%E4%BD%BF%E6%AD%8C%E5%8D%95&musicId=12345678,23456789,34567890,45678901,56789012,67890123,78901234,89012345,90123456"
+            setTimeout(() => {
+                router.push("/open-app")
+            }, 2000)
+        }
+        return {openApp};
     },
 });
 </script>

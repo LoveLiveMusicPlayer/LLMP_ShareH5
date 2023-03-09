@@ -1,23 +1,27 @@
 <template>
     <div class="open-app">
-        <share_affix></share_affix>
         <div class="logo">
             <img src="@/assets/images/svg_logo.svg" alt=""/>
         </div>
-        <el-button class="download">立即下载</el-button>
+        <el-button class="download" @click="btnDownload">立即下载</el-button>
     </div>
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import share_affix from '@/components/share-affix/share-affix.vue';
+import appUtil from "@/utils/appUtil";
+import {storeToRefs} from 'pinia'
+import {useStore} from "@/store/main";
+
+let store = useStore()
+let {isAndroid} = storeToRefs(store)
 
 export default defineComponent({
-    components: {
-        share_affix,
-    },
     setup() {
-        return {};
+        function btnDownload() {
+            appUtil.jumpToDownload(isAndroid.value).then(url => window.location.href = url)
+        }
+        return {btnDownload};
     },
 });
 </script>

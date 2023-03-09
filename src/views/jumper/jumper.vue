@@ -20,6 +20,10 @@ export default {
         const type = urlParse.getUrlKey("type")
         const data = urlParse.getUrlKey("data")
 
+        const ua = navigator.userAgent.toLowerCase();
+        const isAndroid = ua.indexOf('android') > -1 || ua.indexOf('linux') > -1;
+        store.saveIsAndroid(isAndroid);
+
         switch (type) {
             case "1":
                 if (data.length == 0) {

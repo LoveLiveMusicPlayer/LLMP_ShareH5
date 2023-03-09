@@ -14,6 +14,7 @@ export interface IMusicInfo {
 // RootState里面有什么东西
 export interface IRootState {
     playInfo: string,
+    isAndroid: boolean,
     shareInfo: string,
     isPlaying: boolean;
     musicInfo: IMusicInfo[];

@@ -83,7 +83,7 @@ export default defineComponent({
     },
 
     unmounted() {
-        this.audioRef!.removeEventListener('timeupdate', timeListener);
+        this.audioRef?.removeEventListener('timeupdate', timeListener);
     },
 
     async mounted() {
