@@ -426,18 +426,13 @@ export default defineComponent({
 
         // 格式化秒为分
         formatTime(second) {
-            // 将秒数除以60，然后下舍入，既得到分钟数
-            let hour
-            hour = Math.floor(second / 60)
-            // 取得秒%60的余数，既得到秒数
-            second = Math.ceil(second % 60)
-            // 将变量转换为字符串
-            hour += ''
-            second += ''
-            // 如果只有一位数，前面增加一个0
-            hour = hour.length === 1 ? '0' + hour : hour
-            second = second.length === 1 ? '0' + second : second
-            return hour + ':' + second
+            let result = '';
+            const minutes = Math.floor((second % 3600) / 60);
+            result += minutes < 10 ? `0${minutes}` : minutes;
+            result += ':';
+            const seconds = Math.floor(second % 60);
+            result += seconds < 10 ? `0${seconds}` : seconds;
+            return result;
         },
 
         // 音频播放完毕
