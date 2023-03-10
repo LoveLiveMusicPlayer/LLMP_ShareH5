@@ -29,7 +29,7 @@ export default {
                     jumpToOpen();
                     return;
                 }
-                store.savePlayInfo(data);
+                store.savePlayInfo(decodeURIComponent(data));
                 router.replace('/play');
                 break;
             case '2':
@@ -37,7 +37,7 @@ export default {
                     jumpToOpen();
                     return;
                 }
-                store.saveShareInfo(data);
+                store.saveShareInfo(decodeURIComponent(data));
                 router.replace('/share');
                 break;
             default:
