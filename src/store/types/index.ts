@@ -8,7 +8,6 @@ export interface IMusicInfo {
     artistName: string;
     url: string;
     time: number;
-    calTime: string;
 }
 
 // RootState里面有什么东西

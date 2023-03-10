@@ -7,7 +7,6 @@ import {
 
 // * types
 import type { APISong, Datum, IMusicInfo, IRootState } from './types';
-import timeUtil from '@/utils/timeUtil';
 
 axios.interceptors.request.use(
     (config: any) => {
@@ -83,7 +82,6 @@ export const useStore = defineStore('main', {
                                 artistName: song1.ar[0].name,
                                 url: song2.url,
                                 time: song2.time,
-                                calTime: timeUtil.millisecondToTime(song2.time),
                             });
                         }
                     });
