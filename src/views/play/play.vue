@@ -7,7 +7,7 @@
                     :src="
                         info && info.coverUrl && info.coverUrl.toString().length > 0 ?
                         info.coverUrl : require(`@/assets/images/svg_logo.svg`)"
-                />
+                 alt=""/>
             </div>
             <div class="music-text">
                 <p class="music-name">{{ info && info.name }}</p>
@@ -65,38 +65,45 @@ export default defineComponent({
 </script>
 
 <style scoped lang="less">
-.music {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+.play {
+    height: 100vh;
 
-    .music-logo {
-        width: 60%;
+    .music {
+        width: 100%;
+        height: 100vh - 8vw;
         margin: 3vh 0;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
 
-        img {
-            width: 100%;
-            border-radius: 20px;
-            box-shadow: 5px 3px 6px 3px #D3E0EC;
-        }
-    }
+        .music-logo {
+            width: 60%;
+            margin: 3vh 0;
 
-    .music-text {
-        text-align: center;
-        margin-bottom: 4vh;
-
-        .music-name {
-            color: #333;
-            font-weight: 600;
-            font-size: 4vw;
+            img {
+                width: 100%;
+                border-radius: 20px;
+                box-shadow: 5px 3px 6px 3px #D3E0EC;
+            }
         }
 
-        .music-sing {
-            font-size: 4vw;
-            font-weight: 500;
-            color: #f940a7;
-            margin-top: 1.333vw;
+        .music-text {
+            text-align: center;
+            margin-bottom: 4vh;
+
+            .music-name {
+                color: #333;
+                font-weight: 600;
+                font-size: 4vw;
+            }
+
+            .music-sing {
+                font-size: 4vw;
+                font-weight: 500;
+                color: #f940a7;
+                margin-top: 1.333vw;
+            }
         }
     }
 }
