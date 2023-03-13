@@ -29,13 +29,26 @@ export default defineComponent({
         store.isPlaying = false;
 
         // 测试接口
-        const musicListId = [
-            26111145, 28768096, 1832849841, 469699072, 1834947914, 1988842994,
-            1988842994, 1875023978,
-        ];
+        const musicIdMap = new Map()
+        musicIdMap.set(26111145, "26111145")
+        musicIdMap.set(28768096, "28768096")
+        musicIdMap.set(1832849841, "1832849841")
+        musicIdMap.set(469699072, "469699072")
+        musicIdMap.set(1834947914, "1834947914")
+        musicIdMap.set(1988842994, "1988842994")
+        musicIdMap.set(1875023978, "1875023978")
+
+        const nameMap = new Map()
+        nameMap.set(26111145, "26111145")
+        nameMap.set(28768096, "28768096")
+        nameMap.set(1832849841, "1832849841")
+        nameMap.set(469699072, "469699072")
+        nameMap.set(1834947914, "1834947914")
+        nameMap.set(1988842994, "1988842994")
+        nameMap.set(1875023978, "1875023978")
 
         // 发送网络请求获取音乐数据
-        store.getMusicInfo(musicListId);
+        store.getMusicInfo(nameMap, musicIdMap);
         const musicInfo = computed(() => store.musicInfo);
 
         onMounted(() => {
@@ -49,7 +62,6 @@ export default defineComponent({
                 audioRef.value!.src =
                     musicInfo.value[playCurrentIndex.value].url;
                 setTimeout(() => {
-                    console.log(111);
                     audioRef.value!.play();
                 }, 100);
             });

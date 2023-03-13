@@ -1,12 +1,9 @@
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 import axios from 'axios';
-import {
-    getZhushenwudiMusicInfoAPI,
-    getZhushenwudiMusicUrlAPI,
-} from '@/constant/api';
+import {getZhushenwudiMusicInfoAPI, getZhushenwudiMusicUrlAPI,} from '@/constant/api';
 
 // * types
-import type { APISong, Datum, IMusicInfo, IRootState } from './types';
+import type {APISong, Datum, IMusicInfo, IRootState} from './types';
 
 axios.interceptors.request.use(
     (config: any) => {
@@ -62,27 +59,32 @@ export const useStore = defineStore('main', {
         },
 
         // * 请求歌单列表数据
-        async getMusicInfo(payload: number[]) {
-            const infoAPI = getZhushenwudiMusicInfoAPI(payload);
+        async getMusicInfo(nameMap: Map<number, string>, musicIdMap: Map<number, string>) {
+            const infoAPI = getZhushenwudiMusicInfoAPI([...musicIdMap.keys()]);
             const resp1 = await axios.get(infoAPI);
-            const urlAPI = getZhushenwudiMusicUrlAPI(payload);
+            const urlAPI = getZhushenwudiMusicUrlAPI([...musicIdMap.keys()]);
             const resp2 = await axios.get(urlAPI);
 
             if (resp1.data.code == 200 && resp2.data.code == 200) {
                 const data1 = resp1.data.songs;
                 const data2 = resp2.data.data;
                 const musicInfo: IMusicInfo[] = [];
+
                 data1.forEach((song1: APISong) => {
                     data2.forEach((song2: Datum) => {
                         if (song1.id == song2.id) {
-                            musicInfo.push({
-                                id: song1.id,
-                                name: song1.name,
-                                coverUrl: song1.al.picUrl,
-                                artistName: song1.ar[0].name,
-                                url: song2.url,
-                                time: song2.time,
-                            });
+                            const musicId = musicIdMap.get(song2.id)
+                            if (musicId) {
+                                musicInfo.push({
+                                    musicId: musicId,
+                                    neteaseId: song1.id,
+                                    name: nameMap.get(song2.id) ?? song1.al.name,
+                                    coverUrl: song1.al.picUrl,
+                                    artistName: song1.ar[0].name,
+                                    url: song2.url,
+                                    time: song2.time,
+                                });
+                            }
                         }
                     });
                 });

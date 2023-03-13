@@ -1,6 +1,6 @@
 <template>
     <div class="play">
-        <share_affix></share_affix>
+        <share_affix type="1" :music-callback="musicCallback"></share_affix>
         <article class="music">
             <div class="music-logo">
                 <img
@@ -57,9 +57,22 @@ export default defineComponent({
         };
     },
 
+    methods: {
+        musicCallback() {
+            if (this.info) {
+                const params = encodeURIComponent("type=1&musicId=" + this.info.musicId)
+                window.location.href = `llmp://top.zhushenwudi?${params}`
+            }
+        }
+    },
+
     async mounted() {
         const info = JSON.parse(playInfo.value);
-        await store.getMusicInfo([info.neteaseId]);
+        const nameMap = new Map()
+        nameMap.set(parseInt(info.neteaseId), info.name)
+        const musicIdMap = new Map()
+        musicIdMap.set(parseInt(info.neteaseId), info._id)
+        await store.getMusicInfo(nameMap, musicIdMap);
     },
 });
 </script>

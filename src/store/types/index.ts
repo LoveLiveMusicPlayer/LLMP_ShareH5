@@ -2,7 +2,8 @@ import {APISong} from './API/info';
 import {Datum} from './API/url';
 
 export interface IMusicInfo {
-    id: number;
+    musicId: string,
+    neteaseId: number;
     name: string;
     coverUrl: string;
     artistName: string;
