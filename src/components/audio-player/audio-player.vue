@@ -191,7 +191,7 @@
             浏览器太老咯，请升级浏览器吧~
         </audio>
 
-        <div class="play-btn" @click.stop="playBtnClick">
+        <div class="play-btn" @click.stop="playBtnClick" v-if="showMyPlayButton">
             <img
                 :src="
                             isPlaying
@@ -224,6 +224,12 @@ export default defineComponent({
         // 是否显示播放按钮
         showPlayButton: {
             default: false,
+            type: Boolean,
+        },
+
+        // 是否显示播放按钮
+        showMyPlayButton: {
+            default: true,
             type: Boolean,
         },
 
@@ -677,7 +683,7 @@ export default defineComponent({
 
             handleNext()
         },
-    },
+    }
 })
 </script>
 

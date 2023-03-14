@@ -1,5 +1,5 @@
 import {createApp} from 'vue';
-import {globalRegister} from '@/global/index';
+import {globalRegister} from '@/global';
 import store from "@/store";
 import App from './App.vue';
 import router from './router';

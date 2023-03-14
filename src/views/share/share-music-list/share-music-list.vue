@@ -1,9 +1,36 @@
 <template>
+    <div class="share-player">
+        <article class="cd">
+            <div class="cd-logo">
+                <img :src="pic.length ? pic : `${require('@/assets/images/svg_logo.svg')}`" alt=""/>
+            </div>
+            <p class="cd-name">{{ menuName }}</p>
+        </article>
+        <el-affix :offset="60">
+            <article class="player-bar">
+                <div class="bar-left">
+                    <el-button class="bar-play" @click="playBtnClick">
+                        <div class="bar-play-div">
+                            <img
+                                :src="
+                                    isPlaying
+                                        ? `${require('@/assets/images/pause.svg')}`
+                                        : `${require('@/assets/images/play.svg')}`
+                                "
+                                alt=""
+                            />
+                        </div>
+                    </el-button>
+                    <span class="bar-list-total">{{ musicInfo.length }}首歌曲</span>
+                </div>
+            </article>
+        </el-affix>
+    </div>
     <div class="share-music-list">
         <div class="music-list">
-            <template v-for="musicItem in musicInfo" :key="musicItem.name">
-                <section class="list" @click="play">
-                    <img :src="musicItem.coverUrl" alt="" class="list-img" />
+            <template v-for="(musicItem, index) in musicInfo" :key="musicItem.name">
+                <section class="list" @click="playSelect(index)">
+                    <img :src="musicItem.coverUrl" alt="" class="list-img"/>
                     <div class="list-message">
                         <h2 class="list-name">{{ musicItem.name }}</h2>
                         <p class="list-sing">{{ musicItem.artistName }}</p>
@@ -11,95 +38,169 @@
                 </section>
             </template>
         </div>
-        <el-button class="load-more"> 点击加载更多歌曲 </el-button>
+        <el-button class="load-more">点击加载更多歌曲</el-button>
     </div>
-
-    <audio ref="audioRef" :src="musicInfo[playCurrentIndex].url"></audio>
+    <audio-player
+        ref="audioRef"
+        :audio-list="musicInfo.map(e => e.url)"
+        :before-play="handleBeforePlay"
+        :show-progress-bar="false"
+        :show-my-play-button="false"
+    />
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted, watch } from 'vue';
-import { useStore } from '@/store/main';
+import {defineComponent, ref} from 'vue';
+import {useStore} from '@/store/main';
+import {storeToRefs} from "pinia";
+import AudioPlayer from "components/audio-player/audio-player.vue";
+
+const store = useStore();
+let {shareInfo, musicInfo} = storeToRefs(store);
 
 export default defineComponent({
     name: 'share-music-list',
+    components: {
+        AudioPlayer
+    },
+
     setup() {
-        const store = useStore();
-        const audioRef = ref<HTMLAudioElement>(); // audio 元素
-        store.isPlaying = false;
-
-        // 测试接口
-        const musicIdMap = new Map()
-        musicIdMap.set(26111145, "26111145")
-        musicIdMap.set(28768096, "28768096")
-        musicIdMap.set(1832849841, "1832849841")
-        musicIdMap.set(469699072, "469699072")
-        musicIdMap.set(1834947914, "1834947914")
-        musicIdMap.set(1988842994, "1988842994")
-        musicIdMap.set(1875023978, "1875023978")
-
-        const nameMap = new Map()
-        nameMap.set(26111145, "26111145")
-        nameMap.set(28768096, "28768096")
-        nameMap.set(1832849841, "1832849841")
-        nameMap.set(469699072, "469699072")
-        nameMap.set(1834947914, "1834947914")
-        nameMap.set(1988842994, "1988842994")
-        nameMap.set(1875023978, "1875023978")
-
-        // 发送网络请求获取音乐数据
-        store.getMusicInfo(nameMap, musicIdMap);
-        const musicInfo = computed(() => store.musicInfo);
-
-        onMounted(() => {
-            audioRef.value!.addEventListener('ended', () => {
-                console.log('一首歌播放完成');
-                audioRef.value!.pause();
-                playCurrentIndex.value++;
-                if (playCurrentIndex.value >= musicInfo.value.length) {
-                    playCurrentIndex.value = 0;
-                }
-                audioRef.value!.src =
-                    musicInfo.value[playCurrentIndex.value].url;
-                setTimeout(() => {
-                    audioRef.value!.play();
-                }, 100);
-            });
-
-            watch(
-                () => store.isPlaying,
-                (newValue, oldValue) => {
-                    console.log('newValue:', newValue, 'oldValue:', oldValue);
-                    store.isPlaying
-                        ? audioRef.value!.play()
-                        : audioRef.value!.pause();
-                },
-            );
-        });
+        const audioRef = ref()
+        const menuName = ref('')
+        const pic = ref('')
+        const isPlaying = ref(false)
 
         store.$subscribe((mutation, state) => {
-            // musicInfo.value = state.musicInfo;
+            musicInfo.value = state.musicInfo
+            if (musicInfo.value.length > 0) {
+                pic.value = musicInfo.value[0].coverUrl
+            }
         });
-
-        const playCurrentIndex = ref(0);
-
-        const play = () => {
-            console.log('开始播放');
-            audioRef.value!.play();
-        };
 
         return {
             musicInfo,
+            shareInfo,
+            menuName,
+            pic,
             audioRef,
-            play,
-            playCurrentIndex,
-            // handleListClick,
+            isPlaying
         };
     },
+
+    mounted() {
+        const info = JSON.parse(shareInfo.value)
+        this.menuName = info.menuName
+
+        const musicIdMap = new Map()
+        const nameMap = new Map()
+        info.musicList.forEach((music: any) => {
+            nameMap.set(parseInt(music.neteaseId), music.name)
+            musicIdMap.set(parseInt(music.neteaseId), music._id)
+        })
+
+        // 发送网络请求获取音乐数据
+        store.getMusicInfo(nameMap, musicIdMap)
+    },
+
+    methods: {
+        handleBeforePlay(next: any) {
+            this.pic = this.musicInfo[this.audioRef.currentPlayIndex].coverUrl
+            next()
+        },
+
+        playSelect(index: number) {
+            this.audioRef.currentPlayIndex = index
+            this.$nextTick(() => {
+                this.audioRef.play()
+                this.isPlaying = true
+            })
+        },
+
+        playBtnClick() {
+            if (this.isPlaying) {
+                this.audioRef.pause()
+            } else {
+                this.audioRef.play()
+            }
+            this.isPlaying = !this.isPlaying
+        }
+    }
 });
 </script>
 
 <style scoped lang="less">
+@box-shadow-bgc: #d3e0ec;
+.share-player {
+    width: 100%;
+
+    .cd {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .cd-logo {
+            width: 64vw;
+            height: 64vw;
+            border-radius: 20px;
+            overflow: hidden;
+            object-fit: cover;
+            box-shadow: 5px 3px 6px 0 @box-shadow-bgc;
+            margin: 5.333vw 0;
+
+            img {
+                width: 100%;
+            }
+        }
+
+        .cd-name {
+            color: #333;
+            font-weight: 600;
+            line-height: 24px;
+        }
+    }
+
+    .player-bar {
+        width: 100%;
+        height: 17.067vw;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 3.2vw;
+        background-color: #f2f8ff;
+
+        .bar-left {
+            display: flex;
+            align-items: center;
+
+            .bar-play {
+                width: 14.933vw;
+                height: 6.4vw;
+                background: linear-gradient(270deg, #f940a7 0%, #ff86c9 100%);
+                box-shadow: 5px 3px 6px 0 #d3e0ec, -3px -3px 6px 0px #ffffff;
+                border-radius: 20px;
+                overflow: hidden;
+
+                .bar-play-div {
+                    text-indent: -80px;
+
+                    img {
+                        width: 4.5vw;
+                        filter: drop-shadow(40px 0px #fff);
+                    }
+                }
+            }
+
+            .bar-list-total {
+                color: #333;
+                font-size: 3.5vw;
+                margin-left: 2.667vw;
+                font-weight: 600;
+            }
+        }
+    }
+}
+
 .share-music-list {
     width: 100%;
     display: flex;
@@ -113,6 +214,7 @@ export default defineComponent({
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+
             .list-img {
                 width: 12.8vw;
                 height: 12.8vw;
@@ -125,12 +227,14 @@ export default defineComponent({
                     width: 100%;
                 }
             }
+
             .list-message {
                 .list-name {
                     font-size: 4vw;
                     font-weight: bold;
                     color: #333;
                 }
+
                 .list-sing {
                     color: #999;
                     font-size: 3.2vw;
@@ -138,6 +242,7 @@ export default defineComponent({
             }
         }
     }
+
     .load-more {
         margin-top: 5.333vw;
         margin-bottom: 50px;

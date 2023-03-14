@@ -15,7 +15,6 @@
             </div>
             <div class="music-control">
                 <audio-player
-                    ref="audioRef"
                     :audio-list="[info && info.url]"
                 />
             </div>
@@ -43,7 +42,6 @@ export default defineComponent({
 
     setup() {
         const isPlaying = ref(false);
-        const audioRef = ref()
         const info = ref<IMusicInfo>();
 
         store.$subscribe((mutation, state) => {
@@ -52,8 +50,7 @@ export default defineComponent({
 
         return {
             isPlaying,
-            info,
-            audioRef
+            info
         };
     },
 
@@ -66,13 +63,13 @@ export default defineComponent({
         }
     },
 
-    async mounted() {
-        const info = JSON.parse(playInfo.value);
+    mounted() {
+        const music = JSON.parse(playInfo.value)
         const nameMap = new Map()
-        nameMap.set(parseInt(info.neteaseId), info.name)
+        nameMap.set(parseInt(music.neteaseId), music.name)
         const musicIdMap = new Map()
-        musicIdMap.set(parseInt(info.neteaseId), info._id)
-        await store.getMusicInfo(nameMap, musicIdMap);
+        musicIdMap.set(parseInt(music.neteaseId), music._id)
+        store.getMusicInfo(nameMap, musicIdMap)
     },
 });
 </script>
