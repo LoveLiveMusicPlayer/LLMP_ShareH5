@@ -28,7 +28,7 @@
     </div>
     <div class="share-music-list">
         <div class="music-list">
-            <template v-for="(musicItem, index) in musicInfo" :key="musicItem.name">
+            <template v-for="(musicItem, index) in musicInfo" :key="musicItem.musicId">
                 <section class="list" @click="playSelect(index)">
                     <img :src="musicItem.coverUrl" alt="" class="list-img"/>
                     <div class="list-message">
@@ -46,6 +46,9 @@
         :before-play="handleBeforePlay"
         :show-progress-bar="false"
         :show-my-play-button="false"
+        @play="() => isPlaying = true"
+        @play-error="() => isPlaying = false"
+        @pause="() => isPlaying = false"
     />
 </template>
 
@@ -112,7 +115,6 @@ export default defineComponent({
             this.audioRef.currentPlayIndex = index
             this.$nextTick(() => {
                 this.audioRef.play()
-                this.isPlaying = true
             })
         },
 
@@ -122,7 +124,6 @@ export default defineComponent({
             } else {
                 this.audioRef.play()
             }
-            this.isPlaying = !this.isPlaying
         }
     }
 });
@@ -177,7 +178,7 @@ export default defineComponent({
                 width: 14.933vw;
                 height: 6.4vw;
                 background: linear-gradient(270deg, #f940a7 0%, #ff86c9 100%);
-                box-shadow: 5px 3px 6px 0 #d3e0ec, -3px -3px 6px 0px #ffffff;
+                box-shadow: 5px 3px 6px 0 @box-shadow-bgc, -3px -3px 6px 0px #ffffff;
                 border-radius: 20px;
                 overflow: hidden;
 
