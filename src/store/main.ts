@@ -1,9 +1,12 @@
-import {defineStore} from 'pinia';
+import { defineStore } from 'pinia';
 import axios from 'axios';
-import {getZhushenwudiMusicInfoAPI, getZhushenwudiMusicUrlAPI,} from '@/constant/api';
+import {
+    getZhushenwudiMusicInfoAPI,
+    getZhushenwudiMusicUrlAPI,
+} from '@/constant/api';
 
 // * types
-import type {APISong, Datum, IMusicInfo, IRootState} from './types';
+import type { APISong, Datum, IMusicInfo, IRootState } from './types';
 
 axios.interceptors.request.use(
     (config: any) => {
@@ -55,11 +58,14 @@ export const useStore = defineStore('main', {
         },
 
         saveIsAndroid(isAndroid: boolean) {
-            this.isAndroid = isAndroid
+            this.isAndroid = isAndroid;
         },
 
         // * 请求歌单列表数据
-        async getMusicInfo(nameMap: Map<number, string>, musicIdMap: Map<number, string>) {
+        async getMusicInfo(
+            nameMap: Map<number, string>,
+            musicIdMap: Map<number, string>,
+        ) {
             const infoAPI = getZhushenwudiMusicInfoAPI([...musicIdMap.keys()]);
             const resp1 = await axios.get(infoAPI);
             const urlAPI = getZhushenwudiMusicUrlAPI([...musicIdMap.keys()]);
@@ -73,12 +79,13 @@ export const useStore = defineStore('main', {
                 data1.forEach((song1: APISong) => {
                     data2.forEach((song2: Datum) => {
                         if (song1.id == song2.id) {
-                            const musicId = musicIdMap.get(song2.id)
+                            const musicId = musicIdMap.get(song2.id);
                             if (musicId) {
                                 musicInfo.push({
                                     musicId: musicId,
                                     neteaseId: song1.id,
-                                    name: nameMap.get(song2.id) ?? song1.al.name,
+                                    name:
+                                        nameMap.get(song2.id) ?? song1.al.name,
                                     coverUrl: song1.al.picUrl,
                                     artistName: song1.ar[0].name,
                                     url: song2.url,

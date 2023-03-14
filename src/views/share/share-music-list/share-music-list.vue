@@ -2,7 +2,14 @@
     <div class="share-player">
         <article class="cd">
             <div class="cd-logo">
-                <img :src="pic.length ? pic : `${require('@/assets/images/svg_logo.svg')}`" alt=""/>
+                <img
+                    :src="
+                        pic.length
+                            ? pic
+                            : `${require('@/assets/images/svg_logo.svg')}`
+                    "
+                    alt=""
+                />
             </div>
             <p class="cd-name">{{ menuName }}</p>
         </article>
@@ -21,16 +28,21 @@
                             />
                         </div>
                     </el-button>
-                    <span class="bar-list-total">{{ musicInfo.length }}首歌曲</span>
+                    <span class="bar-list-total"
+                        >{{ musicInfo.length }}首歌曲</span
+                    >
                 </div>
             </article>
         </el-affix>
     </div>
     <div class="share-music-list">
         <div class="music-list">
-            <template v-for="(musicItem, index) in musicInfo" :key="musicItem.musicId">
+            <template
+                v-for="(musicItem, index) in musicInfo"
+                :key="musicItem.musicId"
+            >
                 <section class="list" @click="playSelect(index)">
-                    <img :src="musicItem.coverUrl" alt="" class="list-img"/>
+                    <img :src="musicItem.coverUrl" alt="" class="list-img" />
                     <div class="list-message">
                         <h2 class="list-name">{{ musicItem.name }}</h2>
                         <p class="list-sing">{{ musicItem.artistName }}</p>
@@ -38,94 +50,112 @@
                 </section>
             </template>
         </div>
-        <el-button class="load-more">点击加载更多歌曲</el-button>
+        <el-button class="load-more" @click="onLoadMore"
+            >点击加载更多歌曲</el-button
+        >
     </div>
     <audio-player
         ref="audioRef"
-        :audio-list="musicInfo.map(e => e.url)"
+        :audio-list="musicInfo.map((e) => e.url)"
         :before-play="handleBeforePlay"
         :show-progress-bar="false"
         :show-my-play-button="false"
-        @play="() => isPlaying = true"
-        @play-error="() => isPlaying = false"
-        @pause="() => isPlaying = false"
+        @play="() => (isPlaying = true)"
+        @play-error="() => (isPlaying = false)"
+        @pause="() => (isPlaying = false)"
     />
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue';
-import {useStore} from '@/store/main';
-import {storeToRefs} from "pinia";
-import AudioPlayer from "components/audio-player/audio-player.vue";
+import { defineComponent, ref, reactive } from 'vue';
+import { useStore } from '@/store/main';
+import { storeToRefs } from 'pinia';
+import AudioPlayer from 'components/audio-player/audio-player.vue';
 
 const store = useStore();
-let {shareInfo, musicInfo} = storeToRefs(store);
+let { shareInfo, musicInfo } = storeToRefs(store);
 
 export default defineComponent({
     name: 'share-music-list',
     components: {
-        AudioPlayer
+        AudioPlayer,
     },
 
     setup() {
-        const audioRef = ref()
-        const menuName = ref('')
-        const pic = ref('')
-        const isPlaying = ref(false)
+        const audioRef = ref();
+        const menuName = ref('');
+        const pic = ref('');
+        const isPlaying = ref(false);
+        const newMusicInfo = reactive({});
 
         store.$subscribe((mutation, state) => {
-            musicInfo.value = state.musicInfo
+            musicInfo.value = state.musicInfo;
             if (musicInfo.value.length > 0) {
-                pic.value = musicInfo.value[0].coverUrl
+                pic.value = musicInfo.value[0].coverUrl;
             }
         });
 
         return {
             musicInfo,
+            newMusicInfo,
             shareInfo,
             menuName,
             pic,
             audioRef,
-            isPlaying
+            isPlaying,
         };
     },
 
     mounted() {
-        const info = JSON.parse(shareInfo.value)
-        this.menuName = info.menuName
+        const info = JSON.parse(shareInfo.value);
+        this.menuName = info.menuName;
 
-        const musicIdMap = new Map()
-        const nameMap = new Map()
+        const musicIdMap = new Map();
+        const nameMap = new Map();
         info.musicList.forEach((music: any) => {
-            nameMap.set(parseInt(music.neteaseId), music.name)
-            musicIdMap.set(parseInt(music.neteaseId), music._id)
-        })
+            nameMap.set(parseInt(music.neteaseId), music.name);
+            musicIdMap.set(parseInt(music.neteaseId), music._id);
+        });
 
         // 发送网络请求获取音乐数据
-        store.getMusicInfo(nameMap, musicIdMap)
+        store.getMusicInfo(nameMap, musicIdMap);
+        this.newMusicInfo = store.musicInfo.slice(0, 1);
+        console.log(this.newMusicInfo);
     },
 
     methods: {
         handleBeforePlay(next: any) {
-            this.pic = this.musicInfo[this.audioRef.currentPlayIndex].coverUrl
-            next()
+            this.pic = this.musicInfo[this.audioRef.currentPlayIndex].coverUrl;
+            next();
         },
 
         playSelect(index: number) {
-            this.audioRef.currentPlayIndex = index
+            this.audioRef.currentPlayIndex = index;
             this.$nextTick(() => {
-                this.audioRef.play()
-            })
+                this.audioRef.play();
+            });
         },
 
         playBtnClick() {
             if (this.isPlaying) {
-                this.audioRef.pause()
+                this.audioRef.pause();
             } else {
-                this.audioRef.play()
+                this.audioRef.play();
             }
-        }
-    }
+        },
+
+        onLoadMore() {
+            let offset = 1;
+            offset += 1;
+            const oldMusicInfo = this.newMusicInfo;
+            const newMusicInfo = store.musicInfo.slice(0, offset);
+            this.newMusicInfo = {
+                ...oldMusicInfo,
+                ...newMusicInfo,
+            };
+            console.log(this.newMusicInfo);
+        },
+    },
 });
 </script>
 
@@ -178,7 +208,8 @@ export default defineComponent({
                 width: 14.933vw;
                 height: 6.4vw;
                 background: linear-gradient(270deg, #f940a7 0%, #ff86c9 100%);
-                box-shadow: 5px 3px 6px 0 @box-shadow-bgc, -3px -3px 6px 0px #ffffff;
+                box-shadow: 5px 3px 6px 0 @box-shadow-bgc,
+                    -3px -3px 6px 0px #ffffff;
                 border-radius: 20px;
                 overflow: hidden;
 
@@ -187,6 +218,7 @@ export default defineComponent({
 
                     img {
                         width: 4.5vw;
+                        -webkit-filter: drop-shadow(40px 0px #fff);
                         filter: drop-shadow(40px 0px #fff);
                     }
                 }
