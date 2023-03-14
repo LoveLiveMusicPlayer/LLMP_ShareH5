@@ -9,7 +9,9 @@
 import {defineComponent, ref} from 'vue';
 import share_affix from '@/components/share-affix/share-affix.vue';
 import share_music_list from './share-music-list/share-music-list.vue';
-import {IMusicInfo} from "@/store/types";
+import {useStore} from "@/store/main";
+
+const store = useStore();
 
 export default defineComponent({
     name: 'share',
@@ -18,14 +20,22 @@ export default defineComponent({
         share_music_list,
     },
 
-    setup() {
-        const info = ref<IMusicInfo[]>();
-    },
-
     methods: {
-        // menuCallback() {
-        //
-        // }
+        menuCallback() {
+            const info = JSON.parse(store.shareInfo)
+            if (info.musicList.length > 0) {
+                const musicIds: string[] = []
+                info.musicList.forEach((music: any) => {
+                    musicIds.push(music._id)
+                })
+                const obj = {
+                    menuName: info.menuName,
+                    musicIds: musicIds
+                }
+                const params = encodeURIComponent("type=2&data=" + JSON.stringify(obj))
+                window.location.href = `llmp://top.zhushenwudi?${params}`
+            }
+        }
     }
 });
 </script>
