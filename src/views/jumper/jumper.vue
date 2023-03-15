@@ -37,7 +37,7 @@ export default {
                     jumpToOpen();
                     return;
                 }
-                store.saveShareInfo(decodeURIComponent(data));
+                store.saveShareKey(decodeURIComponent(data));
                 router.replace('/share');
                 break;
             default:

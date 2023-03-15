@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import axios from 'axios';
 import {
+    getShareKV,
     getZhushenwudiMusicInfoAPI,
     getZhushenwudiMusicUrlAPI,
 } from '@/constant/api';
@@ -10,7 +11,7 @@ import type { APISong, Datum, IMusicInfo, IRootState } from './types';
 
 axios.interceptors.request.use(
     (config: any) => {
-        console.log('请求地址:', config.url);
+        // console.log('请求地址:', config.url);
         return config;
     },
     (err: any) => {
@@ -32,6 +33,7 @@ export const useStore = defineStore('main', {
     state: (): IRootState => {
         return {
             playInfo: '' as string,
+            shareKey: '' as string,
             shareInfo: '' as string,
             isPlaying: false as boolean,
             isAndroid: false as boolean,
@@ -51,9 +53,9 @@ export const useStore = defineStore('main', {
         },
 
         // 保存歌单页入参
-        saveShareInfo(payload: string) {
+        saveShareKey(payload: string) {
             if (payload && payload.length > 0) {
-                this.shareInfo = payload;
+                this.shareKey = payload;
             }
         },
 
@@ -98,5 +100,16 @@ export const useStore = defineStore('main', {
                 this.musicInfo = musicInfo;
             }
         },
+
+        async getShareInfo(key: string) {
+            if (key.length === 0) {
+                return;
+            }
+            const resp = await axios.post(getShareKV(), {"key": key});
+
+            if (resp.data.success) {
+                this.shareInfo = resp.data.value
+            }
+        }
     },
 });

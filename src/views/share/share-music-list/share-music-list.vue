@@ -28,9 +28,7 @@
                             />
                         </div>
                     </el-button>
-                    <span class="bar-list-total"
-                        >{{ musicInfo.length }}首歌曲</span
-                    >
+                    <span class="bar-list-total">{{ musicInfo.length }}首歌曲</span>
                 </div>
             </article>
         </el-affix>
@@ -39,10 +37,9 @@
         <div class="music-list">
             <template
                 v-for="(musicItem, index) in musicInfo"
-                :key="musicItem.musicId"
-            >
+                :key="musicItem.musicId">
                 <section class="list" @click="playSelect(index)">
-                    <img :src="musicItem.coverUrl" alt="" class="list-img" />
+                    <img :src="musicItem.coverUrl" alt="" class="list-img"/>
                     <div class="list-message">
                         <h2 class="list-name">{{ musicItem.name }}</h2>
                         <p class="list-sing">{{ musicItem.artistName }}</p>
@@ -50,9 +47,7 @@
                 </section>
             </template>
         </div>
-        <el-button class="load-more" @click="onLoadMore"
-            >点击加载更多歌曲</el-button
-        >
+        <el-button class="load-more" @click="onLoadMore">点击加载更多歌曲</el-button>
     </div>
     <audio-player
         ref="audioRef"
@@ -67,13 +62,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive } from 'vue';
-import { useStore } from '@/store/main';
-import { storeToRefs } from 'pinia';
+import {defineComponent, reactive, ref} from 'vue';
+import {useStore} from '@/store/main';
+import {storeToRefs} from 'pinia';
 import AudioPlayer from 'components/audio-player/audio-player.vue';
 
 const store = useStore();
-let { shareInfo, musicInfo } = storeToRefs(store);
+let {musicInfo} = storeToRefs(store);
 
 export default defineComponent({
     name: 'share-music-list',
@@ -98,7 +93,6 @@ export default defineComponent({
         return {
             musicInfo,
             newMusicInfo,
-            shareInfo,
             menuName,
             pic,
             audioRef,
@@ -106,8 +100,9 @@ export default defineComponent({
         };
     },
 
-    mounted() {
-        const info = JSON.parse(shareInfo.value);
+    async mounted() {
+        await store.getShareInfo(store.shareKey);
+        const info = JSON.parse(store.shareInfo);
         this.menuName = info.menuName;
 
         const musicIdMap = new Map();
@@ -118,9 +113,8 @@ export default defineComponent({
         });
 
         // 发送网络请求获取音乐数据
-        store.getMusicInfo(nameMap, musicIdMap);
-        this.newMusicInfo = store.musicInfo.slice(0, 1);
-        console.log(this.newMusicInfo);
+        await store.getMusicInfo(nameMap, musicIdMap);
+        this.newMusicInfo = this.musicInfo.slice(0, 1);
     },
 
     methods: {
@@ -148,12 +142,11 @@ export default defineComponent({
             let offset = 1;
             offset += 1;
             const oldMusicInfo = this.newMusicInfo;
-            const newMusicInfo = store.musicInfo.slice(0, offset);
+            const newMusicInfo = this.musicInfo.slice(0, offset);
             this.newMusicInfo = {
                 ...oldMusicInfo,
                 ...newMusicInfo,
             };
-            console.log(this.newMusicInfo);
         },
     },
 });
@@ -236,6 +229,7 @@ export default defineComponent({
 
 .share-music-list {
     width: 100%;
+    margin-bottom: 50px;
     display: flex;
     flex-direction: column;
 
@@ -278,7 +272,7 @@ export default defineComponent({
 
     .load-more {
         margin-top: 5.333vw;
-        margin-bottom: 50px;
+        margin-bottom: 30px;
         background-color: transparent;
         border: none;
         font-size: 3.6vw;

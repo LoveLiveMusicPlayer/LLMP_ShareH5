@@ -15,6 +15,7 @@ export interface IMusicInfo {
 export interface IRootState {
     playInfo: string,
     isAndroid: boolean,
+    shareKey: string,
     shareInfo: string,
     isPlaying: boolean;
     musicInfo: IMusicInfo[];
