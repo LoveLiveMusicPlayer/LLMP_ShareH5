@@ -20,5 +20,6 @@ module.exports = {
         '@typescript-eslint/explicit-module-boundary-types': 'off',
         'vue/multi-word-component-names': 'off',
         '@typescript-eslint/no-unused-vars': 'off',
+        'vue/valid-v-for': 'off',
     },
 };

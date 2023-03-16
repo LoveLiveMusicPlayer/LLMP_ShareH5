@@ -28,18 +28,21 @@
                             />
                         </div>
                     </el-button>
-                    <span class="bar-list-total">{{ musicInfo.length }}首歌曲</span>
+                    <span class="bar-list-total"
+                        >{{ musicInfo.length }}首歌曲</span
+                    >
                 </div>
             </article>
         </el-affix>
     </div>
     <div class="share-music-list">
-        <div class="music-list">
+        <div class="music-list" ref="musicListRef">
             <template
-                v-for="(musicItem, index) in musicInfo"
-                :key="musicItem.musicId">
+                v-for="(musicItem, index) in newMusicInfo"
+                :key="musicItem.musicId"
+            >
                 <section class="list" @click="playSelect(index)">
-                    <img :src="musicItem.coverUrl" alt="" class="list-img"/>
+                    <img :src="musicItem.coverUrl" alt="" class="list-img" />
                     <div class="list-message">
                         <h2 class="list-name">{{ musicItem.name }}</h2>
                         <p class="list-sing">{{ musicItem.artistName }}</p>
@@ -47,7 +50,9 @@
                 </section>
             </template>
         </div>
-        <el-button class="load-more" @click="onLoadMore">点击加载更多歌曲</el-button>
+        <el-button class="load-more" @click="onLoadMore" v-if="isBottomShow"
+            >点击加载更多歌曲</el-button
+        >
     </div>
     <audio-player
         ref="audioRef"
@@ -62,13 +67,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, ref} from 'vue';
-import {useStore} from '@/store/main';
-import {storeToRefs} from 'pinia';
+import { defineComponent, reactive, ref, watchEffect } from 'vue';
+import { useStore } from '@/store/main';
+import { storeToRefs } from 'pinia';
 import AudioPlayer from 'components/audio-player/audio-player.vue';
 
 const store = useStore();
-let {musicInfo} = storeToRefs(store);
+let { musicInfo } = storeToRefs(store);
 
 export default defineComponent({
     name: 'share-music-list',
@@ -78,10 +83,12 @@ export default defineComponent({
 
     setup() {
         const audioRef = ref();
+        const musicListRef = ref<HTMLElement>();
         const menuName = ref('');
         const pic = ref('');
         const isPlaying = ref(false);
-        const newMusicInfo = reactive({});
+        const offset = ref(0); // 抽取音乐列表数据时使用的偏移量
+        const isBottomShow = ref(true); // 是否显示'加载更多'文字
 
         store.$subscribe((mutation, state) => {
             musicInfo.value = state.musicInfo;
@@ -90,9 +97,14 @@ export default defineComponent({
             }
         });
 
+        const newMusicInfo = reactive(musicInfo.value.slice(0, 20));
+
         return {
             musicInfo,
+            musicListRef,
             newMusicInfo,
+            offset,
+            isBottomShow,
             menuName,
             pic,
             audioRef,
@@ -114,7 +126,11 @@ export default defineComponent({
 
         // 发送网络请求获取音乐数据
         await store.getMusicInfo(nameMap, musicIdMap);
-        this.newMusicInfo = this.musicInfo.slice(0, 1);
+
+        if (this.musicListRef!.children.length === this.musicInfo.length) {
+            this.isBottomShow = false;
+            return;
+        }
     },
 
     methods: {
@@ -139,14 +155,24 @@ export default defineComponent({
         },
 
         onLoadMore() {
-            let offset = 1;
-            offset += 1;
+            this.offset += 20;
             const oldMusicInfo = this.newMusicInfo;
-            const newMusicInfo = this.musicInfo.slice(0, offset);
-            this.newMusicInfo = {
-                ...oldMusicInfo,
-                ...newMusicInfo,
-            };
+            const newMusicInfo = this.musicInfo.slice(
+                this.offset,
+                this.offset + 20,
+            );
+
+            this.newMusicInfo = [...oldMusicInfo, ...newMusicInfo];
+
+            if (
+                this.musicInfo.length - this.musicListRef!.children.length <
+                20
+            ) {
+                this.isBottomShow = false;
+                return;
+            }
+
+            this.$forceUpdate();
         },
     },
 });
