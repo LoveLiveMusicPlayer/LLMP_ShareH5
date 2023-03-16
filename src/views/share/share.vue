@@ -6,7 +6,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue';
+import {defineComponent} from 'vue';
 import share_affix from '@/components/share-affix/share-affix.vue';
 import share_music_list from './share-music-list/share-music-list.vue';
 import {useStore} from "@/store/main";

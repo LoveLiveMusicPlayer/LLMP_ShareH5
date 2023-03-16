@@ -21,6 +21,7 @@ export default defineComponent({
         function btnDownload() {
             appUtil.jumpToDownload(isAndroid.value).then(url => window.location.href = url)
         }
+
         return {btnDownload};
     },
 });

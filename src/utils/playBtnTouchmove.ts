@@ -1,4 +1,4 @@
-import { Ref, ref } from 'vue';
+import {Ref, ref} from 'vue';
 
 export function playBtnTouchmove(ele: Ref<HTMLElement>) {
     const differenceX = ref(0);

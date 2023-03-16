@@ -1,13 +1,9 @@
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 import axios from 'axios';
-import {
-    getShareKV,
-    getZhushenwudiMusicInfoAPI,
-    getZhushenwudiMusicUrlAPI,
-} from '@/constant/api';
+import {getShareKV, getZhushenwudiMusicInfoAPI, getZhushenwudiMusicUrlAPI,} from '@/constant/api';
 
 // * types
-import type { APISong, Datum, IMusicInfo, IRootState } from './types';
+import type {APISong, Datum, IMusicInfo, IRootState} from './types';
 
 axios.interceptors.request.use(
     (config: any) => {

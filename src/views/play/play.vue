@@ -7,7 +7,7 @@
                     :src="
                         info && info.coverUrl && info.coverUrl.toString().length > 0 ?
                         info.coverUrl : require(`@/assets/images/svg_logo.svg`)"
-                 alt=""/>
+                    alt=""/>
             </div>
             <div class="music-text">
                 <p class="music-name">{{ info && info.name }}</p>

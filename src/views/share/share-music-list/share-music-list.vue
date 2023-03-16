@@ -29,7 +29,7 @@
                         </div>
                     </el-button>
                     <span class="bar-list-total"
-                        >{{ musicInfo.length }}首歌曲</span
+                    >{{ musicInfo.length }}首歌曲</span
                     >
                 </div>
             </article>
@@ -42,7 +42,7 @@
                 :key="musicItem.musicId"
             >
                 <section class="list" @click="playSelect(index)">
-                    <img :src="musicItem.coverUrl" alt="" class="list-img" />
+                    <img :src="musicItem.coverUrl" alt="" class="list-img"/>
                     <div class="list-message">
                         <h2 class="list-name">{{ musicItem.name }}</h2>
                         <p class="list-sing">{{ musicItem.artistName }}</p>
@@ -51,7 +51,8 @@
             </template>
         </div>
         <el-button class="load-more" @click="onLoadMore" v-if="isBottomShow"
-            >点击加载更多歌曲</el-button
+        >点击加载更多歌曲
+        </el-button
         >
     </div>
     <audio-player
@@ -67,13 +68,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, ref, watchEffect } from 'vue';
-import { useStore } from '@/store/main';
-import { storeToRefs } from 'pinia';
+import {defineComponent, reactive, ref} from 'vue';
+import {useStore} from '@/store/main';
+import {storeToRefs} from 'pinia';
 import AudioPlayer from 'components/audio-player/audio-player.vue';
 
 const store = useStore();
-let { musicInfo } = storeToRefs(store);
+let {musicInfo} = storeToRefs(store);
 
 export default defineComponent({
     name: 'share-music-list',
@@ -255,7 +256,6 @@ export default defineComponent({
 
 .share-music-list {
     width: 100%;
-    margin-bottom: 50px;
     display: flex;
     flex-direction: column;
 
@@ -297,8 +297,7 @@ export default defineComponent({
     }
 
     .load-more {
-        margin-top: 5.333vw;
-        margin-bottom: 30px;
+        margin-bottom: 3.333vw;
         background-color: transparent;
         border: none;
         font-size: 3.6vw;

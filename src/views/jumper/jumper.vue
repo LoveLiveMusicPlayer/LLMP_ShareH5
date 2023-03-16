@@ -1,7 +1,7 @@
 <template>
     <div class="jumper">
         <div class="logo">
-            <img src="@/assets/images/svg_logo.svg" alt="" />
+            <img src="@/assets/images/svg_logo.svg" alt=""/>
         </div>
     </div>
 </template>
@@ -9,7 +9,7 @@
 <script lang="ts">
 import router from '@/router';
 import urlParse from '@/utils/urlParse';
-import { useStore } from '@/store/main';
+import {useStore} from '@/store/main';
 
 /* eslint-disable */
 export default {
