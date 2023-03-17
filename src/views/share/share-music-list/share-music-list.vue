@@ -73,6 +73,7 @@ import {useStore} from '@/store/main';
 import {storeToRefs} from 'pinia';
 import AudioPlayer from 'components/audio-player/audio-player.vue';
 import {IMusicInfo} from "@/store/types";
+import { ElMessage } from 'element-plus'
 
 const LIMIT = 20;
 
@@ -117,24 +118,30 @@ export default defineComponent({
 
     async mounted() {
         await store.getShareInfo(store.shareKey);
-        const info = JSON.parse(store.shareInfo);
-        this.menuName = info.menuName;
+        try {
+            const info = JSON.parse(store.shareInfo);
+            this.menuName = info.menuName;
 
-        const musicIdMap = new Map();
-        const nameMap = new Map();
-        info.musicList.forEach((music: any) => {
-            nameMap.set(parseInt(music.neteaseId), music.name);
-            musicIdMap.set(parseInt(music.neteaseId), music._id);
-        });
+            const musicIdMap = new Map();
+            const nameMap = new Map();
+            info.musicList.forEach((music: any) => {
+                nameMap.set(parseInt(music.neteaseId), music.name);
+                musicIdMap.set(parseInt(music.neteaseId), music._id);
+            });
+            // 发送网络请求获取音乐数据
+            await store.getMusicInfo(nameMap, musicIdMap);
+            this.showMusicList = this.musicInfo.slice(0, LIMIT);
 
-        // 发送网络请求获取音乐数据
-        await store.getMusicInfo(nameMap, musicIdMap);
-
-        this.showMusicList = this.musicInfo.slice(0, LIMIT);
-
-        if (this.musicListRef!.children.length === this.musicInfo.length) {
-            this.isBottomShow = false;
-            return;
+            if (this.musicListRef!.children.length === this.musicInfo.length) {
+                this.isBottomShow = false;
+                return;
+            }
+        } catch (e) {
+            ElMessage.error("获取链接异常")
+            this.menuName = ''
+            this.pic = ''
+            this.musicInfo = []
+            this.showMusicList = []
         }
     },
 

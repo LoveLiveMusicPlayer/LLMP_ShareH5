@@ -69,7 +69,7 @@ export const useStore = defineStore('main', {
             const urlAPI = getZhushenwudiMusicUrlAPI([...musicIdMap.keys()]);
             const resp2 = await axios.get(urlAPI);
 
-            if (resp1.data.code == 200 && resp2.data.code == 200) {
+            if (resp1.data && resp1.data.code == 200 && resp2.data && resp2.data.code == 200) {
                 const data1 = resp1.data.songs;
                 const data2 = resp2.data.data;
                 const musicInfo: IMusicInfo[] = [];
@@ -94,6 +94,8 @@ export const useStore = defineStore('main', {
                     });
                 });
                 this.musicInfo = musicInfo;
+            } else {
+                this.musicInfo = []
             }
         },
 
@@ -103,8 +105,10 @@ export const useStore = defineStore('main', {
             }
             const resp = await axios.post(getShareKV(), {"key": key});
 
-            if (resp.data.success) {
+            if (resp.data && resp.data.success) {
                 this.shareInfo = resp.data.value
+            } else {
+                this.shareInfo = ''
             }
         }
     },

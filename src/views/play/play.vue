@@ -44,10 +44,6 @@ export default defineComponent({
         const isPlaying = ref(false);
         const info = ref<IMusicInfo>();
 
-        store.$subscribe((mutation, state) => {
-            info.value = state.musicInfo[0];
-        });
-
         return {
             isPlaying,
             info
@@ -63,13 +59,14 @@ export default defineComponent({
         }
     },
 
-    mounted() {
+    async mounted() {
         const music = JSON.parse(playInfo.value)
         const nameMap = new Map()
         nameMap.set(parseInt(music.neteaseId), music.name)
         const musicIdMap = new Map()
         musicIdMap.set(parseInt(music.neteaseId), music._id)
-        store.getMusicInfo(nameMap, musicIdMap)
+        await store.getMusicInfo(nameMap, musicIdMap)
+        this.info = store.musicInfo[0];
     },
 });
 </script>
