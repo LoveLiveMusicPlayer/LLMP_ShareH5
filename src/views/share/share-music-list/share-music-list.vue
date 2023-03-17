@@ -38,7 +38,7 @@
     <div class="share-music-list">
         <div class="music-list" ref="musicListRef">
             <template
-                v-for="(musicItem, index) in newMusicInfo"
+                v-for="(musicItem, index) in showMusicList"
                 :key="musicItem.musicId"
             >
                 <section class="list" @click="playSelect(index)">
@@ -72,6 +72,9 @@ import {defineComponent, reactive, ref} from 'vue';
 import {useStore} from '@/store/main';
 import {storeToRefs} from 'pinia';
 import AudioPlayer from 'components/audio-player/audio-player.vue';
+import {IMusicInfo} from "@/store/types";
+
+const LIMIT = 20;
 
 const store = useStore();
 let {musicInfo} = storeToRefs(store);
@@ -87,6 +90,7 @@ export default defineComponent({
         const musicListRef = ref<HTMLElement>();
         const menuName = ref('');
         const pic = ref('');
+        const showMusicList = ref<IMusicInfo[]>([]);
         const isPlaying = ref(false);
         const offset = ref(0); // 抽取音乐列表数据时使用的偏移量
         const isBottomShow = ref(true); // 是否显示'加载更多'文字
@@ -98,12 +102,10 @@ export default defineComponent({
             }
         });
 
-        const newMusicInfo = reactive(musicInfo.value.slice(0, 20));
-
         return {
             musicInfo,
             musicListRef,
-            newMusicInfo,
+            showMusicList,
             offset,
             isBottomShow,
             menuName,
@@ -127,6 +129,8 @@ export default defineComponent({
 
         // 发送网络请求获取音乐数据
         await store.getMusicInfo(nameMap, musicIdMap);
+
+        this.showMusicList = this.musicInfo.slice(0, LIMIT);
 
         if (this.musicListRef!.children.length === this.musicInfo.length) {
             this.isBottomShow = false;
@@ -156,19 +160,15 @@ export default defineComponent({
         },
 
         onLoadMore() {
-            this.offset += 20;
-            const oldMusicInfo = this.newMusicInfo;
-            const newMusicInfo = this.musicInfo.slice(
+            this.offset += LIMIT;
+            const appendMusicList = this.musicInfo.slice(
                 this.offset,
-                this.offset + 20,
+                this.offset + LIMIT,
             );
 
-            this.newMusicInfo = [...oldMusicInfo, ...newMusicInfo];
+            this.showMusicList = [...this.showMusicList, ...appendMusicList];
 
-            if (
-                this.musicInfo.length - this.musicListRef!.children.length <
-                20
-            ) {
+            if (this.musicInfo.length - this.musicListRef!.children.length < LIMIT) {
                 this.isBottomShow = false;
                 return;
             }
