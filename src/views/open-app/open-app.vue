@@ -1,7 +1,7 @@
 <template>
     <div class="open-app">
         <div class="logo">
-            <img src="@/assets/images/svg_logo.svg" alt=""/>
+            <img src="@/assets/images/share_logo.png" alt=""/>
         </div>
         <el-button class="download" @click="btnDownload">立即下载</el-button>
     </div>
@@ -32,11 +32,12 @@ export default defineComponent({
     position: relative;
     width: 100vw;
     height: 100vh;
-    // background-color: #fff;
+    background-color: #fff;
 
     .logo {
         position: absolute;
-        width: 80%;
+        width: 300px;
+        height: 300px;
         top: 45%;
         left: 50%;
         transform: translate(-50%, -50%);
@@ -52,10 +53,10 @@ export default defineComponent({
         right: 0;
         bottom: 24vw;
         margin: 0 auto;
-        width: 85.333vw;
-        height: 60px;
+        width: 73.333vw;
+        height: 55px;
         background: linear-gradient(270deg, #f940a7 0%, #ff86c9 100%);
-        box-shadow: 5px 3px 6px 0px #d3e0ec, -3px -3px 6px 0px #ffffff;
+        box-shadow: 5px 3px 6px 0 #d3e0ec, -3px -3px 6px 0px #ffffff;
         border-radius: 30px;
         font-size: 4.533vw;
         color: #fff;
