@@ -21,8 +21,8 @@
                             <img
                                 :src="
                                     isPlaying
-                                        ? `${require('@/assets/images/pause.svg')}`
-                                        : `${require('@/assets/images/play.svg')}`
+                                        ? `${require('@/assets/images/pause_light.svg')}`
+                                        : `${require('@/assets/images/play_light.svg')}`
                                 "
                                 alt=""
                             />
