@@ -44,8 +44,8 @@
                 <section class="list" @click="playSelect(index)">
                     <img :src="musicItem.coverUrl" alt="" class="list-img"/>
                     <div class="list-message">
-                        <h2 class="list-name">{{ musicItem.name }}</h2>
-                        <p class="list-sing">{{ musicItem.artistName }}</p>
+                        <h2 class="list-name" :style="renderText(index)">{{ musicItem.name }}</h2>
+                        <p class="list-sing" :style="renderText(index)">{{ musicItem.artistName }}</p>
                     </div>
                 </section>
             </template>
@@ -152,6 +152,10 @@ export default defineComponent({
         },
 
         playSelect(index: number) {
+            if (this.audioRef.currentPlayIndex === index) {
+                this.playBtnClick();
+                return;
+            }
             this.audioRef.currentPlayIndex = index;
             this.$nextTick(() => {
                 this.audioRef.play();
@@ -182,6 +186,10 @@ export default defineComponent({
 
             this.$forceUpdate();
         },
+
+        renderText(index: number) {
+            return this.audioRef.currentPlayIndex === index ? 'color: #FFAE00' : 'color: black';
+        }
     },
 });
 </script>
@@ -241,12 +249,8 @@ export default defineComponent({
                 overflow: hidden;
 
                 .bar-play-div {
-                    text-indent: -80px;
-
                     img {
                         width: 4.5vw;
-                        -webkit-filter: drop-shadow(40px 0px #fff);
-                        filter: drop-shadow(40px 0px #fff);
                     }
                 }
             }
