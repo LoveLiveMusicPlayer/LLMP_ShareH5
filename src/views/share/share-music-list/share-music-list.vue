@@ -94,7 +94,7 @@ export default defineComponent({
         const showMusicList = ref<IMusicInfo[]>([]);
         const isPlaying = ref(false);
         const offset = ref(0); // 抽取音乐列表数据时使用的偏移量
-        const isBottomShow = ref(true); // 是否显示'加载更多'文字
+        const isBottomShow = ref(false); // 是否显示'加载更多'文字
 
         store.$subscribe((mutation, state) => {
             musicInfo.value = state.musicInfo;
@@ -132,9 +132,8 @@ export default defineComponent({
             await store.getMusicInfo(nameMap, musicIdMap);
             this.showMusicList = this.musicInfo.slice(0, LIMIT);
 
-            if (this.musicListRef!.children.length === this.musicInfo.length) {
-                this.isBottomShow = false;
-                return;
+            if (this.musicInfo.length > LIMIT) {
+                this.isBottomShow = true;
             }
         } catch (e) {
             ElMessage.error("获取链接异常")
@@ -181,10 +180,7 @@ export default defineComponent({
 
             if (this.musicInfo.length - this.musicListRef!.children.length < LIMIT) {
                 this.isBottomShow = false;
-                return;
             }
-
-            this.$forceUpdate();
         },
 
         renderText(index: number) {
