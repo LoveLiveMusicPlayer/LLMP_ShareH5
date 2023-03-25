@@ -59,21 +59,22 @@
         ref="audioRef"
         :audio-list="musicInfo.map((e) => e.url)"
         :before-play="handleBeforePlay"
+        :after-play="handleAfterPlay"
         :show-progress-bar="false"
         :show-my-play-button="false"
         @play="() => (isPlaying = true)"
-        @play-error="() => (isPlaying = false)"
+        @play-error="handlePlayError"
         @pause="() => (isPlaying = false)"
     />
 </template>
 
 <script lang="ts">
-import {defineComponent, reactive, ref} from 'vue';
+import {defineComponent, ref} from 'vue';
 import {useStore} from '@/store/main';
 import {storeToRefs} from 'pinia';
 import AudioPlayer from 'components/audio-player/audio-player.vue';
 import {IMusicInfo} from "@/store/types";
-import { ElMessage } from 'element-plus'
+import {ElMessage} from 'element-plus'
 
 const LIMIT = 20;
 
@@ -96,13 +97,6 @@ export default defineComponent({
         const offset = ref(0); // 抽取音乐列表数据时使用的偏移量
         const isBottomShow = ref(false); // 是否显示'加载更多'文字
 
-        store.$subscribe((mutation, state) => {
-            musicInfo.value = state.musicInfo;
-            if (musicInfo.value.length > 0) {
-                pic.value = musicInfo.value[0].coverUrl;
-            }
-        });
-
         return {
             musicInfo,
             musicListRef,
@@ -116,38 +110,79 @@ export default defineComponent({
         };
     },
 
-    async mounted() {
-        await store.getShareInfo(store.shareKey);
-        try {
-            const info = JSON.parse(store.shareInfo);
-            this.menuName = info.menuName;
-
-            const musicIdMap = new Map();
-            const nameMap = new Map();
-            info.musicList.forEach((music: any) => {
-                nameMap.set(parseInt(music.neteaseId), music.name);
-                musicIdMap.set(parseInt(music.neteaseId), music._id);
-            });
-            // 发送网络请求获取音乐数据
-            await store.getMusicInfo(nameMap, musicIdMap);
-            this.showMusicList = this.musicInfo.slice(0, LIMIT);
-
-            if (this.musicInfo.length > LIMIT) {
-                this.isBottomShow = true;
-            }
-        } catch (e) {
-            ElMessage.error("获取链接异常")
-            this.menuName = ''
-            this.pic = ''
-            this.musicInfo = []
-            this.showMusicList = []
-        }
+    mounted() {
+        this.fetchData()
     },
 
     methods: {
+        async fetchData() {
+            await store.getShareInfo(store.shareKey);
+            try {
+                const info = JSON.parse(store.shareInfo);
+                this.menuName = info.menuName;
+
+                const musicIdMap = new Map();
+                const nameMap = new Map();
+                const nullMap = new Set<any>();
+                info.musicList.forEach((music: any) => {
+                    nameMap.set(parseInt(music.neteaseId), music.name);
+                    if (music.neteaseId == null) {
+                        nullMap.add(music)
+                    } else {
+                        musicIdMap.set(parseInt(music.neteaseId), music._id);
+                    }
+                });
+                // 发送网络请求获取音乐数据
+                await store.getMusicInfo(nameMap, musicIdMap, nullMap);
+                this.showMusicList = this.musicInfo.slice(0, LIMIT);
+
+                if (this.musicInfo.length > 0) {
+                    if (store.latestPlayingMusic.shareKey == store.shareKey) {
+                        const latestMusicIndex = this.musicInfo.findIndex(info =>
+                            info.musicId == store.latestPlayingMusic.musicId)
+
+                        if (latestMusicIndex > 0) {
+                            this.pic = this.musicInfo[latestMusicIndex].coverUrl;
+                            this.audioRef.currentPlayIndex = latestMusicIndex;
+                        }
+                    } else {
+                        this.pic = this.musicInfo[0].coverUrl;
+                    }
+                    setTimeout(() => this.audioRef.play(), 1000);
+                }
+
+                if (this.musicInfo.length > LIMIT) {
+                    this.isBottomShow = true;
+                }
+            } catch (e) {
+                ElMessage.error("获取链接异常")
+                this.menuName = ''
+                this.pic = ''
+                this.musicInfo = []
+                this.showMusicList = []
+            }
+        },
+
         handleBeforePlay(next: any) {
-            this.pic = this.musicInfo[this.audioRef.currentPlayIndex].coverUrl;
+            const music = this.musicInfo[this.audioRef.currentPlayIndex];
+            this.pic = music.coverUrl;
             next();
+        },
+
+        handleAfterPlay() {
+            const music = this.musicInfo[this.audioRef.currentPlayIndex];
+            store.saveLatestPlayingMusic(store.shareKey, music.musicId);
+        },
+
+        handlePlayError(data: any) {
+            this.isPlaying = false;
+            const music = this.musicInfo[this.audioRef.currentPlayIndex];
+            const isSourceNull = music.neteaseId == null
+            if (isSourceNull) {
+                store.saveLatestPlayingMusic(store.shareKey, music.musicId);
+                return;
+            }
+            window.location.reload()
         },
 
         playSelect(index: number) {
@@ -156,9 +191,7 @@ export default defineComponent({
                 return;
             }
             this.audioRef.currentPlayIndex = index;
-            this.$nextTick(() => {
-                this.audioRef.play();
-            });
+            this.$nextTick(() => this.audioRef.play());
         },
 
         playBtnClick() {
@@ -184,7 +217,11 @@ export default defineComponent({
         },
 
         renderText(index: number) {
-            return this.audioRef.currentPlayIndex === index ? 'color: #FFAE00' : 'color: black';
+            const mIndex = this.audioRef.currentPlayIndex;
+            if (mIndex == null) {
+                return;
+            }
+            return mIndex === index ? 'color: #FFAE00' : 'color: black';
         }
     },
 });

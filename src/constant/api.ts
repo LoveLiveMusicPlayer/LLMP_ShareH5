@@ -1,11 +1,11 @@
 export const xrNasIP = 'http://10.87.1.106:2333/';
 
-export function getZhushenwudiMusicUrlAPI(id: number[]): string {
-    return `https://netease-backend.zhushenwudi.top/song/url/v1?id=${id}&level=lossless`;
+export function getZhushenwudiMusicUrlAPI(): string {
+    return `https://netease-backend.zhushenwudi.top/song/url/v1?timestamp=${new Date().getTime()}`;
 }
 
-export function getZhushenwudiMusicInfoAPI(id: number[]): string {
-    return `https://netease-backend.zhushenwudi.top/song/detail?ids=${id}`;
+export function getZhushenwudiMusicInfoAPI(): string {
+    return `https://netease-backend.zhushenwudi.top/song/detail?timestamp=${new Date().getTime()}`;
 }
 
 export function getShareKV(): string {

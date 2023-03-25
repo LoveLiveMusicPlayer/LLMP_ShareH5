@@ -263,6 +263,11 @@ export default defineComponent({
             type: Function,
         },
 
+        afterPlay: {
+            default: null,
+            type: Function,
+        },
+
         // 上一首前的回调函数
         beforePrev: {
             default: null,
@@ -561,12 +566,19 @@ export default defineComponent({
                             this.isLoading = false
                         })
                         this.$emit('play')
+                        if (this.afterPlay) {
+                            this.afterPlay()
+                        }
                     })
                     .catch((data) => {
                         // this.handleShowErrorMessage({
                         //     message: data.message,
                         // })
                         console.log(data.message)
+
+                        if (data.code === 0) {
+                            return;
+                        }
 
                         // Failed to load because no supported source was found.
                         if (data.code === 9) {

@@ -64,8 +64,12 @@ export default defineComponent({
         const nameMap = new Map()
         nameMap.set(parseInt(music.neteaseId), music.name)
         const musicIdMap = new Map()
+        const nullMap = new Set<any>()
+        if (music.neteaseId == null) {
+            nullMap.add(music)
+        }
         musicIdMap.set(parseInt(music.neteaseId), music._id)
-        await store.getMusicInfo(nameMap, musicIdMap)
+        await store.getMusicInfo(nameMap, musicIdMap, nullMap)
         this.info = store.musicInfo[0];
     },
 });
