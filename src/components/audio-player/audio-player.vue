@@ -5,19 +5,19 @@
                 v-if="showPlaybackRate"
                 class="audio__play-rate"
                 :style="{
-          color: themeColor,
-        }"
+                    color: themeColor,
+                }"
             >
-        <span @click.stop="isShowRates = !isShowRates">{{
-                playbackRate.toFixed(1) + 'x'
-            }}</span>
+                <span @click.stop="isShowRates = !isShowRates">{{
+                    playbackRate.toFixed(1) + 'x'
+                }}</span>
                 <transition name="fade-rate">
                     <div
                         v-show="isShowRates"
                         class="audio__play-rate__dropdown"
                         :style="{
-              backgroundColor: themeColor,
-            }"
+                            backgroundColor: themeColor,
+                        }"
                     >
                         <div
                             v-for="rate in playbackRates"
@@ -36,24 +36,24 @@
                 :class="{ disable: !isLoop && currentPlayIndex === 0 }"
                 @click.stop="playPrev"
                 :style="{
-          color: themeColor,
-        }"
+                    color: themeColor,
+                }"
             >
                 <slot name="play-prev">
                     <svg class="audio__play-icon" aria-hidden="true">
-                        <use xlink:href="#icon-play-prev"/>
+                        <use xlink:href="#icon-play-prev" />
                     </svg>
                 </slot>
             </div>
 
             <div v-if="isLoading" style="visibility: hidden">
-        <span
-            v-for="item in 8"
-            :key="item"
-            :style="{
-            backgroundColor: themeColor,
-          }"
-        />
+                <span
+                    v-for="item in 8"
+                    :key="item"
+                    :style="{
+                        backgroundColor: themeColor,
+                    }"
+                />
             </div>
 
             <template v-else>
@@ -62,12 +62,12 @@
                     class="audio__play-start"
                     @click.stop="play"
                     :style="{
-            color: themeColor,
-          }"
+                        color: themeColor,
+                    }"
                 >
                     <slot name="play-start">
                         <svg class="audio__play-icon" aria-hidden="true">
-                            <use xlink:href="#icon-play"/>
+                            <use xlink:href="#icon-play" />
                         </svg>
                     </slot>
                 </div>
@@ -77,12 +77,12 @@
                     class="audio__play-pause"
                     @click.stop="pause"
                     :style="{
-            color: themeColor,
-          }"
+                        color: themeColor,
+                    }"
                 >
                     <slot name="play-pause">
                         <svg class="audio__play-icon" aria-hidden="true">
-                            <use xlink:href="#icon-play-pause"/>
+                            <use xlink:href="#icon-play-pause" />
                         </svg>
                     </slot>
                 </div>
@@ -92,16 +92,17 @@
                 v-if="showNextButton"
                 class="audio__play-next"
                 :class="{
-          disable: !isLoop && currentPlayIndex === audioList.length - 1,
-        }"
+                    disable:
+                        !isLoop && currentPlayIndex === audioList.length - 1,
+                }"
                 @click.stop="playNext"
                 :style="{
-          color: themeColor,
-        }"
+                    color: themeColor,
+                }"
             >
                 <slot name="play-next">
                     <svg class="audio__play-icon" aria-hidden="true">
-                        <use xlink:href="#icon-play-next"/>
+                        <use xlink:href="#icon-play-next" />
                     </svg>
                 </slot>
             </div>
@@ -111,14 +112,16 @@
                     class="audio__play-icon"
                     aria-hidden="true"
                     :style="{
-            color: themeColor,
-          }"
+                        color: themeColor,
+                    }"
                     @click.stop="handleVolumeIconTouchstart"
                 >
                     <use
                         :xlink:href="
-              currentVolume ? `#icon-play-volume` : `#icon-play-volume-no`
-            "
+                            currentVolume
+                                ? `#icon-play-volume`
+                                : `#icon-play-volume-no`
+                        "
                     />
                 </svg>
 
@@ -135,9 +138,9 @@
                             ref="playVolume"
                             class="audio__play-volume"
                             :style="{
-                height: currentVolume * 100 + '%',
-                backgroundColor: themeColor,
-              }"
+                                height: currentVolume * 100 + '%',
+                                backgroundColor: themeColor,
+                            }"
                         />
                     </div>
                 </transition>
@@ -154,16 +157,16 @@
                 ref="audioProgress"
                 class="audio__progress"
                 :style="{
-          backgroundColor: themeColor,
-        }"
+                    backgroundColor: themeColor,
+                }"
             />
             <div
                 ref="audioProgressPoint"
                 class="audio__progress-point"
                 :style="{
-          backgroundColor: themeColor,
-          boxShadow: `0 0 10px 0 ${themeColor}`,
-        }"
+                    backgroundColor: themeColor,
+                    boxShadow: `0 0 10px 0 ${themeColor}`,
+                }"
                 @panstart="handleProgressPanstart"
                 @panend="handleProgressPanend"
                 @panmove="handleProgressPanmove"
@@ -182,7 +185,9 @@
         <audio
             ref="audio"
             class="audio-player__audio"
-            :src="audioList && audioList.length > 0 && audioList[currentPlayIndex]"
+            :src="
+                audioList && audioList.length > 0 && audioList[currentPlayIndex]
+            "
             v-bind="$attrs"
             @ended="onEnded"
             @timeupdate="onTimeUpdate"
@@ -191,13 +196,17 @@
             浏览器太老咯，请升级浏览器吧~
         </audio>
 
-        <div class="play-btn" @click.stop="playBtnClick" v-if="showMyPlayButton">
+        <div
+            class="play-btn"
+            @click.stop="playBtnClick"
+            v-if="showMyPlayButton"
+        >
             <img
                 :src="
-                            isPlaying
-                                ? `${require('@/assets/images/pause.svg')}`
-                                : `${require('@/assets/images/play.svg')}`
-                        "
+                    isPlaying
+                        ? `${require('@/assets/images/pause.svg')}`
+                        : `${require('@/assets/images/play.svg')}`
+                "
                 alt=""
             />
         </div>
@@ -205,9 +214,9 @@
 </template>
 
 <script>
-import {defineComponent} from 'vue';
-import Core from '@any-touch/core'
-import Pan from '@any-touch/pan'
+import { defineComponent } from 'vue';
+import Core from '@any-touch/core';
+import Pan from '@any-touch/pan';
 
 export default defineComponent({
     name: 'audio-player',
@@ -360,27 +369,29 @@ export default defineComponent({
             currentVolume: 1, // 当前音量
             playbackRate: 1, // 当前播放速率
             at: null,
-        }
+        };
     },
 
     computed: {
         currentTimeFormatted() {
-            return this.currentTime ? this.formatTime(this.currentTime) : '00:00'
+            return this.currentTime
+                ? this.formatTime(this.currentTime)
+                : '00:00';
         },
 
         durationFormatted() {
-            return this.duration ? this.formatTime(this.duration) : '00:00'
+            return this.duration ? this.formatTime(this.duration) : '00:00';
         },
     },
 
     mounted() {
-        this.at = new Core(this.$el, {preventDefault: false})
-        this.at.use(Pan)
+        this.at = new Core(this.$el, { preventDefault: false });
+        this.at.use(Pan);
     },
 
     beforeUnmount() {
-        this.at.destroy()
-        this.pause()
+        this.at.destroy();
+        this.pause();
     },
 
     methods: {
@@ -389,50 +400,51 @@ export default defineComponent({
                 return;
             }
             if (this.isPlaying) {
-                this.pause()
+                this.pause();
             } else {
                 this.play();
             }
         },
 
         handleVolumeIconTouchstart() {
-            this.isShowVolume = !this.isShowVolume
+            this.isShowVolume = !this.isShowVolume;
         },
 
         handleVolumePanmove(event) {
-            let playVolumeWrapRect = this.$refs.playVolumeWrap.getBoundingClientRect()
-            let pageY = event.y
-            let offsetTop
-            let volume
+            let playVolumeWrapRect =
+                this.$refs.playVolumeWrap.getBoundingClientRect();
+            let pageY = event.y;
+            let offsetTop;
+            let volume;
 
-            offsetTop = Math.round(playVolumeWrapRect.bottom - pageY)
-            volume = offsetTop / this.$refs.playVolumeWrap.offsetHeight
-            volume = Math.min(volume, 1)
-            volume = Math.max(volume, 0)
-            this.$refs.audio.volume = volume
-            this.currentVolume = volume
+            offsetTop = Math.round(playVolumeWrapRect.bottom - pageY);
+            volume = offsetTop / this.$refs.playVolumeWrap.offsetHeight;
+            volume = Math.min(volume, 1);
+            volume = Math.max(volume, 0);
+            this.$refs.audio.volume = volume;
+            this.currentVolume = volume;
         },
 
         handleVolumePanend() {
-            this.isShowVolume = false
+            this.isShowVolume = false;
         },
 
         // 设定播放速率
         handleSetPlaybackRate(rate) {
-            this.playbackRate = +rate
-            this.$refs.audio.playbackRate = +rate
-            this.isShowRates = false
+            this.playbackRate = +rate;
+            this.$refs.audio.playbackRate = +rate;
+            this.isShowRates = false;
         },
 
         // 当媒介元素的持续时间以及其它媒介已加载数据时运行脚本
         onLoadedmetadata(event) {
-            this.duration = this.$refs.audio.duration
-            this.$emit('loadedmetadata', event)
+            this.duration = this.$refs.audio.duration;
+            this.$emit('loadedmetadata', event);
         },
 
         // 当前的播放位置发送改变时触发
         onTimeUpdate(event) {
-            this.$emit('timeupdate', event)
+            this.$emit('timeupdate', event);
         },
 
         // 格式化秒为分
@@ -449,100 +461,104 @@ export default defineComponent({
         // 音频播放完毕
         onEnded(event) {
             window.setTimeout(() => {
-                this.pause()
-                this.$emit('ended', event)
+                this.pause();
+                this.$emit('ended', event);
 
                 if (this.isLoop && this.isAutoPlayNext) {
-                    this.playNext()
+                    this.playNext();
                 }
-            }, 1000)
+            }, 1000);
         },
 
         handleProgressPanstart(event) {
-            if (this.disabledProgressDrag) return
+            if (this.disabledProgressDrag) return;
 
-            this.isDragging = true
-            this.$emit('progress-start', event)
+            this.isDragging = true;
+            this.$emit('progress-start', event);
         },
 
         handleProgressPanend(event) {
-            if (this.disabledProgressDrag) return
+            if (this.disabledProgressDrag) return;
 
-            this.$refs.audio.currentTime = this.currentTime
-            this.play()
-            this.isDragging = false
-            this.$emit('progress-end', event)
+            this.$refs.audio.currentTime = this.currentTime;
+            this.play();
+            this.isDragging = false;
+            this.$emit('progress-end', event);
         },
 
         handleProgressPanmove(event) {
-            if (this.disabledProgressDrag) return
+            if (this.disabledProgressDrag) return;
 
-            let pageX = event.x
-            let bcr = event.target.getBoundingClientRect()
-            let targetLeft = parseInt(getComputedStyle(event.target).left)
-            let offsetLeft = targetLeft + (pageX - bcr.left)
+            let pageX = event.x;
+            let bcr = event.target.getBoundingClientRect();
+            let targetLeft = parseInt(getComputedStyle(event.target).left);
+            let offsetLeft = targetLeft + (pageX - bcr.left);
 
             offsetLeft = Math.min(
                 offsetLeft,
-                this.$refs.audioProgressWrap.offsetWidth
-            )
-            offsetLeft = Math.max(offsetLeft, 0)
+                this.$refs.audioProgressWrap.offsetWidth,
+            );
+            offsetLeft = Math.max(offsetLeft, 0);
             // 设置点点位置
-            this.setPointPosition(offsetLeft)
+            this.setPointPosition(offsetLeft);
             // 设置进度条
-            this.$refs.audioProgress.style.width = offsetLeft + 'px'
+            this.$refs.audioProgress.style.width = offsetLeft + 'px';
             // 设置当前时间
             this.currentTime =
-                (offsetLeft / this.$refs.audioProgressWrap.offsetWidth) * this.duration
-            this.$emit('progress-move', event)
+                (offsetLeft / this.$refs.audioProgressWrap.offsetWidth) *
+                this.duration;
+            this.$emit('progress-move', event);
         },
 
         // 初始化音频进度的点击逻辑
         handleClickProgressWrap(event) {
-            if (this.disabledProgressClick) return
+            if (this.disabledProgressClick) return;
 
-            let target = event.target
-            let offsetX = event.offsetX
+            let target = event.target;
+            let offsetX = event.offsetX;
 
             if (target === this.$refs.audioProgressPoint) {
-                return
+                return;
             }
 
             // 设置当前播放位置
             this.currentTime =
-                (offsetX / this.$refs.audioProgressWrap.offsetWidth) * this.duration
-            this.$refs.audio.currentTime = this.currentTime
+                (offsetX / this.$refs.audioProgressWrap.offsetWidth) *
+                this.duration;
+            this.$refs.audio.currentTime = this.currentTime;
             // 设置点点位置
-            this.setPointPosition(offsetX)
+            this.setPointPosition(offsetX);
             // 设置进度条
-            this.$refs.audioProgress.style.width = offsetX + 'px'
-            this.play()
-            this.$emit('progress-click', event)
+            this.$refs.audioProgress.style.width = offsetX + 'px';
+            this.play();
+            this.$emit('progress-click', event);
         },
 
         // 设置点点位置
         setPointPosition(offsetLeft) {
             this.$refs.audioProgressPoint.style.left =
-                offsetLeft - this.$refs.audioProgressPoint.offsetWidth / 2 + 'px'
+                offsetLeft -
+                this.$refs.audioProgressPoint.offsetWidth / 2 +
+                'px';
         },
 
         // 播放中
         playing() {
             // 正在拖拽进度
             if (this.isDragging) {
-                return
+                return;
             }
 
             let offsetLeft =
                 (this.$refs.audio.currentTime / this.$refs.audio.duration) *
-                this.$refs.audioProgressWrap.offsetWidth
+                this.$refs.audioProgressWrap.offsetWidth;
 
-            this.currentTime = this.$refs.audio.currentTime
+            this.currentTime = this.$refs.audio.currentTime;
             // 设置播放进度条
-            this.$refs.audioProgress.style.width = offsetLeft + 'px'
+            this.$refs.audioProgress.style.width = offsetLeft + 'px';
             // 设置播放进度拖拽点位置
-            this.setPointPosition(offsetLeft)
-            this.$emit('playing')
+            this.setPointPosition(offsetLeft);
+            this.$emit('playing');
         },
 
         // 开始播放
@@ -550,31 +566,31 @@ export default defineComponent({
             if (!this.audioList || this.audioList.length === 0) {
                 return;
             }
-            this.isLoading = true
+            this.isLoading = true;
 
             let handlePlay = () => {
                 this.$refs.audio
                     .play()
                     .then(() => {
                         this.$nextTick(() => {
-                            this.clearTimer()
+                            this.clearTimer();
                             this.timer = window.setInterval(
                                 this.playing,
-                                this.progressInterval
-                            )
-                            this.isPlaying = true
-                            this.isLoading = false
-                        })
-                        this.$emit('play')
+                                this.progressInterval,
+                            );
+                            this.isPlaying = true;
+                            this.isLoading = false;
+                        });
+                        this.$emit('play');
                         if (this.afterPlay) {
-                            this.afterPlay()
+                            this.afterPlay();
                         }
                     })
                     .catch((data) => {
                         // this.handleShowErrorMessage({
                         //     message: data.message,
                         // })
-                        console.log(data.message)
+                        console.log(data.message);
 
                         if (data.code === 0) {
                             return;
@@ -584,119 +600,125 @@ export default defineComponent({
                         if (data.code === 9) {
                             if (this.isAutoPlayNext) {
                                 window.setTimeout(() => {
-                                    this.playNext()
-                                }, 1000)
+                                    this.playNext();
+                                }, 1000);
                             }
                         }
 
-                        this.isLoading = false
-                        this.$emit('play-error', data)
-                    })
-            }
+                        this.isLoading = false;
+                        this.$emit('play-error', data);
+                    });
+            };
 
             // 解决 iOS 异步请求后无法播放
             if (this.isIOS) {
-                this.$refs.audio.pause()
-                this.$refs.audio.play()
+                this.$refs.audio.pause();
+                this.$refs.audio.play();
             }
 
             if (this.beforePlay) {
                 this.beforePlay((state) => {
                     if (state !== false) {
-                        handlePlay()
+                        handlePlay();
                     }
-                })
-                return
+                });
+                return;
             }
 
-            handlePlay()
+            handlePlay();
         },
 
         // 暂停播放
         pause() {
-            this.$refs.audio.pause()
+            this.$refs.audio.pause();
             this.$nextTick(() => {
-                this.clearTimer()
-                this.isPlaying = false
-                this.$emit('pause')
-            })
+                this.clearTimer();
+                this.isPlaying = false;
+                this.$emit('pause');
+            });
         },
 
         // 播放上一首
         playPrev() {
             if (this.currentPlayIndex <= 0 && !this.isLoop) {
                 // 无上一首了
-                return
+                return;
             }
 
-            this.clearTimer()
+            this.clearTimer();
 
             let handlePrev = () => {
                 if (this.currentPlayIndex <= 0 && this.isLoop) {
                     // 列表循环
-                    this.currentPlayIndex = this.audioList.length - 1
+                    this.currentPlayIndex = this.audioList.length - 1;
                 } else {
-                    this.currentPlayIndex--
+                    this.currentPlayIndex--;
                 }
 
                 this.$nextTick(() => {
-                    this.play()
-                    this.$emit('play-prev')
-                })
-            }
+                    this.play();
+                    this.$emit('play-prev');
+                });
+            };
 
             if (this.beforePrev) {
                 this.beforePrev((state) => {
                     if (state !== false) {
-                        handlePrev()
+                        handlePrev();
                     }
-                })
-                return
+                });
+                return;
             }
-            handlePrev()
+            handlePrev();
         },
 
         clearTimer() {
-            window.clearInterval(this.timer)
-            this.timer = null
+            window.clearInterval(this.timer);
+            this.timer = null;
         },
 
         // 播放下一首
         playNext() {
-            if (this.currentPlayIndex + 1 >= this.audioList.length && !this.isLoop) {
+            if (
+                this.currentPlayIndex + 1 >= this.audioList.length &&
+                !this.isLoop
+            ) {
                 // 无下一首了
-                return
+                return;
             }
 
-            this.clearTimer()
+            this.clearTimer();
 
             let handleNext = () => {
                 // 已经到达列表最后一首
-                if (this.currentPlayIndex + 1 >= this.audioList.length && this.isLoop) {
-                    this.currentPlayIndex = 0
+                if (
+                    this.currentPlayIndex + 1 >= this.audioList.length &&
+                    this.isLoop
+                ) {
+                    this.currentPlayIndex = 0;
                 } else {
-                    this.currentPlayIndex++
+                    this.currentPlayIndex++;
                 }
 
                 this.$nextTick(() => {
-                    this.play()
-                    this.$emit('play-next')
-                })
-            }
+                    this.play();
+                    this.$emit('play-next');
+                });
+            };
 
             if (this.beforeNext) {
                 this.beforeNext((state) => {
                     if (state !== false) {
-                        handleNext()
+                        handleNext();
                     }
-                })
-                return
+                });
+                return;
             }
 
-            handleNext()
+            handleNext();
         },
-    }
-})
+    },
+});
 </script>
 
 <style>
@@ -770,9 +792,9 @@ export default defineComponent({
 }
 
 .audio-player
-.audio__play-volume-icon-wrap
-.audio__play-volume-wrap
-.audio__play-volume {
+    .audio__play-volume-icon-wrap
+    .audio__play-volume-wrap
+    .audio__play-volume {
     position: absolute;
     right: 0;
     bottom: 0;

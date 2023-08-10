@@ -13,61 +13,60 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue';
-import {storeToRefs} from 'pinia'
-import {useStore} from "@/store/main";
-import router from "@/router";
+import { defineComponent, ref } from 'vue';
+import { storeToRefs } from 'pinia';
+import { useStore } from '@/store/main';
+import router from '@/router';
 
-let store = useStore()
-let {isAndroid} = storeToRefs(store)
+let store = useStore();
+let { isAndroid } = storeToRefs(store);
 
 export default defineComponent({
     name: 'share-affix',
     props: {
         type: {
-            default: "",
+            default: '',
             type: String,
         },
         musicCallback: {
             default: null,
-            type: Function
+            type: Function,
         },
         menuCallback: {
             default: null,
-            type: Function
-        }
+            type: Function,
+        },
     },
 
-
     setup() {
-        const text = ref("")
-        return {text}
+        const text = ref('');
+        return { text };
     },
 
     mounted() {
         switch (this.type) {
-            case "1":
-                this.text = "打开LLMP"
-                break
-            case "2":
-                this.text = "导入LLMP"
-                break
+            case '1':
+                this.text = '打开LLMP';
+                break;
+            case '2':
+                this.text = '导入LLMP';
+                break;
         }
     },
 
     methods: {
         btnClick() {
             switch (this.type) {
-                case "1":
-                    this.musicCallback()
-                    break
-                case "2":
-                    this.menuCallback()
-                    break
+                case '1':
+                    this.musicCallback();
+                    break;
+                case '2':
+                    this.menuCallback();
+                    break;
             }
-            setTimeout(() => router.push("/open-app"), 2000)
-        }
-    }
+            setTimeout(() => router.push('/open-app'), 2000);
+        },
+    },
 });
 </script>
 
@@ -103,7 +102,8 @@ a {
             height: 8.533vw;
             margin-right: 3.2vw;
             border-radius: 8px;
-            background: #ffffff url('@/assets/images/svg_logo.svg') no-repeat center center / 100%;
+            background: #ffffff url('@/assets/images/svg_logo.svg') no-repeat
+                center center / 100%;
 
             img {
                 width: 100%;
@@ -124,8 +124,20 @@ a {
             font-weight: bold;
             background: #f2f8ff;
             box-shadow: -3px -3px 6px 0px #ffffff,
-            5px 3px 6px 0px @box-shadow-bgc;
+                5px 3px 6px 0px @box-shadow-bgc;
             border-radius: 21px;
+        }
+    }
+}
+
+@media screen and (min-width: 1020px) and (max-width: 1267px) {
+}
+
+@media screen and (min-width: 1267px) {
+    .share-affix {
+        background-color: #f00;
+        .affix-header {
+            height: 100px;
         }
     }
 }

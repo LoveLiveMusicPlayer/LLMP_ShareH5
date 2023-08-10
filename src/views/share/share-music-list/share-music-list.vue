@@ -1,85 +1,102 @@
 <template>
-    <div class="share-player">
-        <article class="cd">
-            <div class="cd-logo">
-                <img
-                    :src="
-                        pic.length
-                            ? pic
-                            : `${require('@/assets/images/svg_logo.svg')}`
-                    "
-                    alt=""
-                />
-            </div>
-            <p class="cd-name">{{ menuName }}</p>
-        </article>
-        <el-affix :offset="60">
-            <article class="player-bar">
-                <div class="bar-left">
-                    <el-button class="bar-play" @click="playBtnClick">
-                        <div class="bar-play-div">
-                            <img
-                                :src="
-                                    isPlaying
-                                        ? `${require('@/assets/images/pause_light.svg')}`
-                                        : `${require('@/assets/images/play_light.svg')}`
-                                "
-                                alt=""
-                            />
-                        </div>
-                    </el-button>
-                    <span class="bar-list-total"
-                    >{{ musicInfo.length }}首歌曲</span
-                    >
-                </div>
-            </article>
-        </el-affix>
-    </div>
     <div class="share-music-list">
-        <div class="music-list" ref="musicListRef">
-            <template
-                v-for="(musicItem, index) in showMusicList"
-                :key="musicItem.musicId"
-            >
-                <section class="list" @click="playSelect(index)">
-                    <img :src="musicItem.coverUrl" alt="" class="list-img"/>
-                    <div class="list-message">
-                        <h2 class="list-name" :style="renderText(index)">{{ musicItem.name }}</h2>
-                        <p class="list-sing" :style="renderText(index)">{{ musicItem.artistName }}</p>
+        <div class="share-player">
+            <article class="cd">
+                <div class="cd-logo">
+                    <img
+                        :src="
+                            pic.length
+                                ? pic
+                                : `${require('@/assets/images/svg_logo.svg')}`
+                        "
+                        alt=""
+                    />
+                </div>
+                <p class="cd-name">{{ menuName }}</p>
+            </article>
+            <el-affix :offset="60">
+                <article class="player-bar">
+                    <div class="bar-table" style="display: block">
+                        <ul>
+                            <li class="bar-table-name">歌曲</li>
+                            <li class="bar-table-author">歌手</li>
+                            <li class="bar-table-album">专辑</li>
+                            <li class="bar-table-time">时长</li>
+                        </ul>
                     </div>
-                </section>
-            </template>
+                    <div class="bar-left">
+                        <el-button class="bar-play" @click="playBtnClick">
+                            <div class="bar-play-div">
+                                <img
+                                    :src="
+                                        isPlaying
+                                            ? `${require('@/assets/images/pause_light.svg')}`
+                                            : `${require('@/assets/images/play_light.svg')}`
+                                    "
+                                    alt=""
+                                />
+                            </div>
+                        </el-button>
+                        <span class="bar-list-total"
+                            >{{ musicInfo.length }}首歌曲</span
+                        >
+                    </div>
+                </article>
+            </el-affix>
         </div>
-        <el-button class="load-more" @click="onLoadMore" v-if="isBottomShow"
-        >点击加载更多歌曲
-        </el-button
-        >
+        <div class="share-music-list">
+            <div class="music-list" ref="musicListRef">
+                <template
+                    v-for="(musicItem, index) in showMusicList"
+                    :key="musicItem.musicId"
+                >
+                    <section class="list" @click="playSelect(index)">
+                        <img
+                            :src="musicItem.coverUrl"
+                            alt=""
+                            class="list-img"
+                        />
+                        <div class="list-message">
+                            <h2 class="list-name" :style="renderText(index)">
+                                {{ musicItem.name }}
+                            </h2>
+                            <p class="list-sing" :style="renderText(index)">
+                                {{ musicItem.artistName }}
+                            </p>
+                        </div>
+                    </section>
+                </template>
+            </div>
+            <el-button class="load-more" @click="onLoadMore" v-if="isBottomShow"
+                >点击加载更多歌曲
+            </el-button>
+        </div>
+        <audio-player
+            ref="audioRef"
+            :audio-list="musicInfo.map((e) => e.url)"
+            :before-play="handleBeforePlay"
+            :after-play="handleAfterPlay"
+            :show-progress-bar="false"
+            :show-my-play-button="false"
+            @play="() => (isPlaying = true)"
+            @play-error="handlePlayError"
+            @pause="() => (isPlaying = false)"
+        />
     </div>
-    <audio-player
-        ref="audioRef"
-        :audio-list="musicInfo.map((e) => e.url)"
-        :before-play="handleBeforePlay"
-        :after-play="handleAfterPlay"
-        :show-progress-bar="false"
-        :show-my-play-button="false"
-        @play="() => (isPlaying = true)"
-        @play-error="handlePlayError"
-        @pause="() => (isPlaying = false)"
-    />
 </template>
 
 <script lang="ts">
-import {defineComponent, ref} from 'vue';
-import {useStore} from '@/store/main';
-import {storeToRefs} from 'pinia';
+import { defineComponent, ref } from 'vue';
+import { useStore } from '@/store/main';
+import { storeToRefs } from 'pinia';
 import AudioPlayer from 'components/audio-player/audio-player.vue';
-import {IMusicInfo} from "@/store/types";
-import {ElMessage} from 'element-plus'
+import { IMusicInfo } from '@/store/types';
+import { ElMessage } from 'element-plus';
 
 const LIMIT = 20;
 
 const store = useStore();
-let {musicInfo} = storeToRefs(store);
+let { musicInfo } = storeToRefs(store);
 
 export default defineComponent({
     name: 'share-music-list',
@@ -111,7 +128,7 @@ export default defineComponent({
     },
 
     mounted() {
-        this.fetchData()
+        this.fetchData();
     },
 
     methods: {
@@ -127,7 +144,7 @@ export default defineComponent({
                 info.musicList.forEach((music: any) => {
                     nameMap.set(parseInt(music.neteaseId), music.name);
                     if (music.neteaseId == null) {
-                        nullMap.add(music)
+                        nullMap.add(music);
                     } else {
                         musicIdMap.set(parseInt(music.neteaseId), music._id);
                     }
@@ -138,11 +155,15 @@ export default defineComponent({
 
                 if (this.musicInfo.length > 0) {
                     if (store.latestPlayingMusic.shareKey == store.shareKey) {
-                        const latestMusicIndex = this.musicInfo.findIndex(info =>
-                            info.musicId == store.latestPlayingMusic.musicId)
+                        const latestMusicIndex = this.musicInfo.findIndex(
+                            (info) =>
+                                info.musicId ==
+                                store.latestPlayingMusic.musicId,
+                        );
 
                         if (latestMusicIndex > 0) {
-                            this.pic = this.musicInfo[latestMusicIndex].coverUrl;
+                            this.pic =
+                                this.musicInfo[latestMusicIndex].coverUrl;
                             this.audioRef.currentPlayIndex = latestMusicIndex;
                         }
                     } else {
@@ -155,11 +176,11 @@ export default defineComponent({
                     this.isBottomShow = true;
                 }
             } catch (e) {
-                ElMessage.error("获取链接异常")
-                this.menuName = ''
-                this.pic = ''
-                this.musicInfo = []
-                this.showMusicList = []
+                ElMessage.error('获取链接异常');
+                this.menuName = '';
+                this.pic = '';
+                this.musicInfo = [];
+                this.showMusicList = [];
             }
         },
 
@@ -177,12 +198,12 @@ export default defineComponent({
         handlePlayError(data: any) {
             this.isPlaying = false;
             const music = this.musicInfo[this.audioRef.currentPlayIndex];
-            const isSourceNull = music.neteaseId == null
+            const isSourceNull = music.neteaseId == null;
             if (isSourceNull) {
                 store.saveLatestPlayingMusic(store.shareKey, music.musicId);
                 return;
             }
-            window.location.reload()
+            window.location.reload();
         },
 
         playSelect(index: number) {
@@ -211,7 +232,10 @@ export default defineComponent({
 
             this.showMusicList = [...this.showMusicList, ...appendMusicList];
 
-            if (this.musicInfo.length - this.musicListRef!.children.length < LIMIT) {
+            if (
+                this.musicInfo.length - this.musicListRef!.children.length <
+                LIMIT
+            ) {
                 this.isBottomShow = false;
             }
         },
@@ -222,7 +246,7 @@ export default defineComponent({
                 return;
             }
             return mIndex === index ? 'color: #FFAE00' : 'color: black';
-        }
+        },
     },
 });
 </script>
@@ -346,6 +370,84 @@ export default defineComponent({
         border: none;
         font-size: 3.6vw;
         color: #999;
+    }
+}
+</style>
+
+<style scoped lang="less">
+@media screen and (min-width: 1267px) {
+    .share-music-list {
+        max-width: 1200px;
+        margin: 0 auto;
+        .share-player {
+            .cd {
+                flex-direction: row;
+                align-items: stretch;
+                .cd-logo {
+                    width: 250px;
+                    height: 250px;
+                    margin: 40px 65px 35px 0;
+                }
+                .cd-name {
+                    // margin: 7.633vw 0;
+                    padding: 80px 0;
+                    font-size: 31px;
+                }
+            }
+            .player-bar {
+                height: fit-content;
+                .bar-left {
+                    position: absolute;
+                    flex-direction: column;
+                    top: 28.6vw;
+                    left: 34.3vw;
+
+                    .bar-play {
+                        display: none;
+                        width: 8.3vw;
+                        height: 3.4vw;
+
+                        img {
+                            width: 2.3vw;
+                        }
+                    }
+                    .bar-list-total {
+                        position: absolute;
+                        top: -270%;
+                        font-size: 1.3vw;
+                        left: 0;
+                        font-weight: normal;
+                        display: block;
+                        margin: 0;
+                    }
+                }
+                .bar-table {
+                    width: 100%;
+                    ul {
+                        display: flex;
+                        color: #999;
+                        li {
+                            font-size: 1vw;
+                            &:nth-child(1) {
+                                flex: 3;
+                            }
+                            &:nth-child(2) {
+                                flex: 1;
+                            }
+                            &:nth-child(3) {
+                                flex: 1;
+                            }
+                            &:nth-child(4) {
+                                flex: 2;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .share-music-list {
+            display: none;
+        }
     }
 }
 </style>
