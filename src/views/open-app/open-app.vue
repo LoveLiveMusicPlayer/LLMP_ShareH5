@@ -64,4 +64,18 @@ export default defineComponent({
         color: #fff;
     }
 }
+
+@media screen and (min-width: 1267px) {
+    .open-app {
+        .logo {
+            width: 470px;
+            height: 470px;
+        }
+        .download {
+            width: 470px;
+            font-size: 26px;
+            bottom: 10%;
+        }
+    }
+}
 </style>
