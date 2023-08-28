@@ -16,14 +16,6 @@
             </article>
             <el-affix :offset="60">
                 <article class="player-bar">
-                    <div class="bar-table" style="display: block">
-                        <ul>
-                            <li class="bar-table-name">歌曲</li>
-                            <li class="bar-table-author">歌手</li>
-                            <li class="bar-table-album">专辑</li>
-                            <li class="bar-table-time">时长</li>
-                        </ul>
-                    </div>
                     <div class="bar-left">
                         <el-button class="bar-play" @click="playBtnClick">
                             <div class="bar-play-div">
@@ -40,6 +32,14 @@
                         <span class="bar-list-total"
                             >{{ musicInfo.length }}首歌曲</span
                         >
+                    </div>
+                    <div class="bar-table" style="display: block">
+                        <ul>
+                            <li class="bar-table-name">歌曲</li>
+                            <li class="bar-table-author">歌手</li>
+                            <li class="bar-table-album">专辑</li>
+                            <li class="bar-table-time">时长</li>
+                        </ul>
                     </div>
                 </article>
             </el-affix>
@@ -396,44 +396,44 @@ export default defineComponent({
             }
             .player-bar {
                 height: fit-content;
+                flex-direction: column;
+                padding: 0 80px;
                 .bar-left {
-                    position: absolute;
-                    flex-direction: column;
-                    top: 28.6vw;
-                    left: 34.3vw;
+                    width: 100%;
+                    flex-direction: row;
 
                     .bar-play {
-                        display: none;
-                        width: 8.3vw;
-                        height: 3.4vw;
+                        width: 80px;
+                        height: 34px;
+                        border-radius: 10px;
 
                         img {
-                            width: 2.3vw;
+                            width: 24px;
                         }
                     }
                     .bar-list-total {
-                        position: absolute;
-                        top: -270%;
-                        font-size: 1.3vw;
-                        left: 0;
+                        font-size: 18px;
                         font-weight: normal;
                         display: block;
-                        margin: 0;
+                        margin-left: 20px;
                     }
                 }
                 .bar-table {
                     width: 100%;
+                    margin-top: 20px;
                     ul {
                         display: flex;
                         color: #999;
                         li {
+                            display: flex;
+                            flex-direction: row;
+                            align-items: center;
+                            height: 50px;
                             font-size: 1vw;
                             &:nth-child(1) {
                                 flex: 3;
                             }
-                            &:nth-child(2) {
-                                flex: 1;
-                            }
+                            &:nth-child(2),
                             &:nth-child(3) {
                                 flex: 1;
                             }
@@ -446,7 +446,30 @@ export default defineComponent({
             }
         }
         .share-music-list {
-            display: none;
+            .music-list {
+                height: 50px;
+                .list {
+                    padding: 0;
+                    height: 100%;
+                    img {
+                        display: block;
+                        width: 55px !important;
+                        height: 100%;
+                        margin-right: 28px;
+                    }
+                    .list-message {
+                        display: flex;
+                        width: 100%;
+                        .list-name,
+                        .list-sing {
+                            font-size: 18px;
+                        }
+                        .list-name {
+                            width: 445px;
+                        }
+                    }
+                }
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
-import {createApp} from 'vue';
-import {globalRegister} from '@/global';
-import store from "@/store";
+import { createApp } from 'vue';
+import { globalRegister } from '@/global';
+import store from '@/store';
 import App from './App.vue';
 import router from './router';
 import '@/assets/style/index.less';

@@ -51,13 +51,11 @@ export default defineComponent({
     .share {
         width: 100%;
         height: 100vh;
-        background-color: plum;
     }
 }
 
 @media screen and (min-width: 1267px) {
     .share {
-        // width: 80%;
         height: 100vh;
     }
 }

@@ -1,28 +1,30 @@
 <template>
     <div class="open-app">
         <div class="logo">
-            <img src="@/assets/images/share_logo.png" alt=""/>
+            <img src="@/assets/images/share_logo.png" alt="" />
         </div>
         <el-button class="download" @click="btnDownload">立即下载</el-button>
     </div>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
-import appUtil from "@/utils/appUtil";
-import {storeToRefs} from 'pinia'
-import {useStore} from "@/store/main";
+import { defineComponent } from 'vue';
+import appUtil from '@/utils/appUtil';
+import { storeToRefs } from 'pinia';
+import { useStore } from '@/store/main';
 
-let store = useStore()
-let {isAndroid} = storeToRefs(store)
+let store = useStore();
+let { isAndroid } = storeToRefs(store);
 
 export default defineComponent({
     setup() {
         function btnDownload() {
-            appUtil.jumpToDownload(isAndroid.value).then(url => window.location.href = url)
+            appUtil
+                .jumpToDownload(isAndroid.value)
+                .then((url) => (window.location.href = url));
         }
 
-        return {btnDownload};
+        return { btnDownload };
     },
 });
 </script>

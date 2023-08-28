@@ -137,7 +137,37 @@ a {
     .share-affix {
         background-color: #f00;
         .affix-header {
-            height: 100px;
+            height: 80px;
+            padding: 0 10%;
+            display: flex;
+            justify-content: space-between;
+        }
+        .logo {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            width: 220px !important;
+            height: 60px !important;
+            color: #999;
+            background: url('@/assets/images/svg_logo.svg') no-repeat left
+                center / 40% !important;
+
+            &::before {
+                margin-left: 95px;
+                content: 'LLMP-M';
+                font-size: 18px;
+            }
+        }
+        .text {
+            flex: 4;
+            font-size: 34px !important;
+            width: fit-content;
+            text-align: center;
+        }
+        .button {
+            flex: 1;
+            position: relative !important;
+            right: 0 !important;
         }
     }
 }
