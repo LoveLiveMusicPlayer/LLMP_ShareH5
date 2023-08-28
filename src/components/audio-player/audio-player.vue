@@ -1071,4 +1071,19 @@ export default defineComponent({
     width: 9vw;
     height: 9vw;
 }
+
+@media screen and (min-width: 1267px) {
+    .audio-player .audio__progress-wrap {
+        width: 390px;
+    }
+
+    .play-btn {
+        width: 110px !important;
+        height: 110px !important;
+    }
+    .play-btn img {
+        width: 50px !important;
+        height: 50px !important;
+    }
+}
 </style>
