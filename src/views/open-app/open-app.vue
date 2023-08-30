@@ -31,18 +31,18 @@ export default defineComponent({
 
 <style scoped lang="less">
 .open-app {
-    position: relative;
     width: 100vw;
     height: 100vh;
-    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 
     .logo {
-        position: absolute;
         width: 300px;
         height: 300px;
         top: 45%;
         left: 50%;
-        transform: translate(-50%, -50%);
 
         img {
             width: 100%;
@@ -50,31 +50,28 @@ export default defineComponent({
     }
 
     .download {
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 24vw;
-        margin: 0 auto;
-        width: 73.333vw;
+        margin-top: 2vh;
+        width: 300px;
         height: 55px;
         background: linear-gradient(270deg, #f940a7 0%, #ff86c9 100%);
         box-shadow: 5px 3px 6px 0 #d3e0ec, -3px -3px 6px 0px #ffffff;
         border-radius: 30px;
-        font-size: 4.533vw;
         color: #fff;
+        font-size: 20px;
+        font-weight: bold;
     }
 }
 
-@media screen and (min-width: 1267px) {
+@media screen and (max-height: 500px) {
     .open-app {
         .logo {
-            width: 470px;
-            height: 470px;
+            width: 50vh;
+            height: 50vh;
         }
         .download {
-            width: 470px;
-            font-size: 26px;
-            bottom: 10%;
+            width: 50vh;
+            height: 10vh;
+            font-size: 4vh;
         }
     }
 }
