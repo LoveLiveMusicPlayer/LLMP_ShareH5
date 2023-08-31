@@ -899,7 +899,7 @@ export default defineComponent({
 .audio-player .audio__progress-wrap {
     position: relative;
     background: #eaf4ff;
-    width: 87vw;
+    width: 40vh;
     height: 5px;
     border-radius: 3px;
     box-shadow: inset 0 1px 3px 0 #ccddf1;
@@ -908,6 +908,7 @@ export default defineComponent({
     touch-action: none;
     user-select: none;
     -webkit-user-drag: none;
+    max-width: 370px;
 }
 
 .audio-player .audio__progress {
@@ -928,7 +929,7 @@ export default defineComponent({
     height: 16px;
     box-shadow: -3px -3px 6px 0px #ffffff, 5px 3px 6px 0px #d3e0ec;
     border-radius: 50%;
-    margin-top: -12px;
+    margin-top: -9px;
 }
 
 .audio-player .audio__progress-point:after {
@@ -938,7 +939,7 @@ export default defineComponent({
     left: 50%;
     width: 16px;
     height: 16px;
-    margin: -4px 0 0 -4px;
+    margin: -6px 0 0 -8px;
     box-shadow: -3px -3px 6px 0 #ffffff, 5px 3px 6px 0 #d3e0ec;
     background: #f2f8ff;
     border-radius: 50%;
@@ -1056,34 +1057,24 @@ export default defineComponent({
 
 .play-btn {
     display: flex;
-    width: 18vw;
-    height: 18vw;
+    width: 12vh;
+    height: 12vh;
     border: none;
     background: #f2f8ff;
     box-shadow: -3px -3px 6px 0 #ffffff, 5px 3px 6px 0 #d3e0ec;
     border-radius: 50%;
-    margin: 5vh auto 0;
+    margin: 3vh auto;
     align-items: center;
     justify-content: center;
+    max-width: 100px;
+    max-height: 100px;
 }
 
 .play-btn img {
-    width: 9vw;
-    height: 9vw;
+    width: 6vh;
+    height: 6vh;
+    max-width: 50px;
+    max-height: 50px;
 }
 
-@media screen and (min-width: 1267px) {
-    .audio-player .audio__progress-wrap {
-        width: 390px;
-    }
-
-    .play-btn {
-        width: 110px !important;
-        height: 110px !important;
-    }
-    .play-btn img {
-        width: 50px !important;
-        height: 50px !important;
-    }
-}
 </style>

@@ -86,6 +86,8 @@ a {
 
 .share-affix {
     width: 100%;
+    position: absolute;
+    top: 0;
 
     .affix-header {
         position: relative;
@@ -93,32 +95,33 @@ a {
         align-items: center;
         background: #f2f8ff;
         width: 100%;
-        height: 16vw;
+        height: 8vh;
+        min-height: 50px;
         padding: 0 3.2vw;
         box-shadow: 5px 3px 6px 0 @box-shadow-bgc;
 
         .logo {
-            width: 8.533vw;
-            height: 8.533vw;
-            margin-right: 3.2vw;
+            width: 8vh;
+            height: 8vh;
+            min-height: 50px;
+            min-width: 50px;
+            margin-right: 2vw;
             border-radius: 8px;
-            background: #ffffff url('@/assets/images/svg_logo.svg') no-repeat
-                center center / 100%;
-
-            img {
-                width: 100%;
-            }
+            background: url('@/assets/images/svg_logo.svg') no-repeat center center / 100%;
         }
 
         .text {
-            font-size: 3.8vw;
+            font-size: 20px;
             color: #999;
         }
 
         .button {
             position: absolute;
             right: 3.2vw;
-            width: 102px;
+            width: 13vw;
+            max-width: 122px;
+            min-width: 90px;
+            min-height: 32px;
             height: 42px;
             border: none;
             font-weight: bold;
@@ -130,44 +133,15 @@ a {
     }
 }
 
-@media screen and (min-width: 1020px) and (max-width: 1267px) {
-}
-
-@media screen and (min-width: 1267px) {
+@media screen and (max-height: 700px) {
     .share-affix {
-        background-color: #f00;
         .affix-header {
-            height: 80px;
-            padding: 0 10%;
-            display: flex;
-            justify-content: space-between;
-        }
-        .logo {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            width: 220px !important;
-            height: 60px !important;
-            color: #999;
-            background: url('@/assets/images/svg_logo.svg') no-repeat left
-                center / 40% !important;
-
-            &::before {
-                margin-left: 95px;
-                content: 'LLMP-M';
-                font-size: 18px;
+            .text {
+                font-size: 3vh;
             }
-        }
-        .text {
-            flex: 4;
-            font-size: 34px !important;
-            width: fit-content;
-            text-align: center;
-        }
-        .button {
-            flex: 1;
-            position: relative !important;
-            right: 0 !important;
+            .button {
+                height: 5.6vh;
+            }
         }
     }
 }
