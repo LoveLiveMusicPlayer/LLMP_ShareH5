@@ -102,8 +102,9 @@ export default defineComponent({
 
             .music-logo {
                 width: 35vh;
-                max-width: 300px;
                 height: 35vh;
+                max-width: 300px;
+                max-height: 300px;
                 margin: 3vh 0;
 
                 img {

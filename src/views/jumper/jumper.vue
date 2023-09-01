@@ -20,8 +20,8 @@ export default {
         const data = urlParse.getUrlKey('data');
 
         const ua = navigator.userAgent.toLowerCase();
-        const isAndroid = ua.indexOf('android') > -1 || ua.indexOf('linux') > -1;
-        store.saveIsAndroid(isAndroid);
+        store.saveIsAndroid(/Android/i.test(ua));
+        store.saveIsMobile(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua));
 
         switch (type) {
             case '1':

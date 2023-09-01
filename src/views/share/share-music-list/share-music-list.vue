@@ -12,7 +12,24 @@
                         alt=""
                     />
                 </div>
-                <p class="cd-name">{{ menuName }}</p>
+                <div class="music-info">
+                    <div>
+                        <p class="cd-name">{{ menuName }} </p>
+                        <p class="music-size">{{ musicInfo.length }}首歌曲</p>
+                    </div>
+                    <el-button class="button-play" @click="playBtnClick">
+                        <div class="bar-play-div">
+                            <img
+                                :src="
+                                        isPlaying
+                                            ? `${require('@/assets/images/pause_light.svg')}`
+                                            : `${require('@/assets/images/play_light.svg')}`
+                                    "
+                                alt=""
+                            />
+                        </div>
+                    </el-button>
+                </div>
             </article>
             <el-affix :offset="60">
                 <article class="player-bar">
@@ -30,15 +47,13 @@
                             </div>
                         </el-button>
                         <span class="bar-list-total"
-                            >{{ musicInfo.length }}首歌曲</span
+                        >{{ musicInfo.length }}首歌曲</span
                         >
                     </div>
-                    <div class="bar-table" style="display: block">
+                    <div class="bar-table" style="display: block" v-if="showDetail">
                         <ul>
                             <li class="bar-table-name">歌曲</li>
                             <li class="bar-table-author">歌手</li>
-                            <li class="bar-table-album">专辑</li>
-                            <li class="bar-table-time">时长</li>
                         </ul>
                     </div>
                 </article>
@@ -50,7 +65,7 @@
                     v-for="(musicItem, index) in showMusicList"
                     :key="musicItem.musicId"
                 >
-                    <section class="list" @click="playSelect(index)">
+                    <section class="list-item" @click="playSelect(index)">
                         <img
                             :src="musicItem.coverUrl"
                             alt=""
@@ -96,7 +111,7 @@ import { ElMessage } from 'element-plus';
 const LIMIT = 20;
 
 const store = useStore();
-let { musicInfo } = storeToRefs(store);
+let { musicInfo, isMobile } = storeToRefs(store);
 
 export default defineComponent({
     name: 'share-music-list',
@@ -113,9 +128,11 @@ export default defineComponent({
         const isPlaying = ref(false);
         const offset = ref(0); // 抽取音乐列表数据时使用的偏移量
         const isBottomShow = ref(false); // 是否显示'加载更多'文字
+        const showDetail = ref(false);
 
         return {
             musicInfo,
+            isMobile,
             musicListRef,
             showMusicList,
             offset,
@@ -124,14 +141,25 @@ export default defineComponent({
             pic,
             audioRef,
             isPlaying,
+            showDetail,
         };
     },
 
     mounted() {
+        this.showDetail = window.innerWidth >= 1024 && !this.isMobile;
+        window.addEventListener('resize', this.handleResize);
         this.fetchData();
     },
 
+    beforeUnmount() {
+        window.removeEventListener('resize', this.handleResize);
+    },
+
     methods: {
+        handleResize() {
+            this.showDetail = window.innerWidth >= 1024 && !this.isMobile;
+        },
+
         async fetchData() {
             await store.getShareInfo(store.shareKey);
             try {
@@ -252,9 +280,11 @@ export default defineComponent({
 </script>
 
 <style scoped lang="less">
+/* 样式适用于小屏幕设备，如手机 */
 @box-shadow-bgc: #d3e0ec;
 .share-player {
     width: 100%;
+    margin-top: 8vh;
 
     .cd {
         width: 100%;
@@ -263,33 +293,42 @@ export default defineComponent({
         align-items: center;
 
         .cd-logo {
-            width: 64vw;
-            height: 64vw;
+            width: 35vh;
+            height: 35vh;
+            max-width: 300px;
+            max-height: 300px;
             border-radius: 20px;
             overflow: hidden;
             object-fit: cover;
             box-shadow: 5px 3px 6px 0 @box-shadow-bgc;
-            margin: 5.333vw 0;
+            margin-top: 3vh;
+            margin-bottom: 3vh;
 
             img {
                 width: 100%;
             }
         }
 
+        .music-info {
+            display: none;
+        }
+
         .cd-name {
             color: #333;
             font-weight: 600;
-            line-height: 24px;
+            font-size: 2.5vh;
+            max-font-size: 24px;
         }
     }
 
     .player-bar {
         width: 100%;
-        height: 17.067vw;
+        height: 8vh;
+        max-height: 8vh;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 0 3.2vw;
+        padding: 0 24px;
         background-color: #f2f8ff;
 
         .bar-left {
@@ -297,8 +336,8 @@ export default defineComponent({
             align-items: center;
 
             .bar-play {
-                width: 14.933vw;
-                height: 6.4vw;
+                width: 70px;
+                height: 32px;
                 background: linear-gradient(270deg, #f940a7 0%, #ff86c9 100%);
                 box-shadow: 5px 3px 6px 0 @box-shadow-bgc,
                     -3px -3px 6px 0px #ffffff;
@@ -307,16 +346,17 @@ export default defineComponent({
 
                 .bar-play-div {
                     img {
-                        width: 4.5vw;
+                        width: 20px;
                     }
                 }
             }
 
             .bar-list-total {
-                color: #333;
-                font-size: 3.5vw;
                 margin-left: 2.667vw;
+                color: #333;
                 font-weight: 600;
+                font-size: 2.5vh;
+                max-font-size: 24px;
             }
         }
     }
@@ -326,23 +366,26 @@ export default defineComponent({
     width: 100%;
     display: flex;
     flex-direction: column;
+    align-items: center;
 
     .music-list {
-        .list {
+        max-width: 476px;
+        padding: 0 12px;
+        .list-item {
             width: 100%;
-            padding: 0 3.2vw;
-            height: 48px;
+            padding: 0 24px;
+            height: 80px;
             display: flex;
-            align-items: center;
-            margin-bottom: 20px;
+            margin: 12px 0;
 
             .list-img {
-                width: 12.8vw;
-                height: 12.8vw;
+                flex-shrink: 0;
+                width: 80px;
+                height: 80px;
                 object-fit: cover;
                 overflow: hidden;
                 border-radius: 10px;
-                margin-right: 2.667vw;
+                margin-right: 12px;
 
                 img {
                     width: 100%;
@@ -351,14 +394,18 @@ export default defineComponent({
 
             .list-message {
                 .list-name {
-                    font-size: 4vw;
+                    max-width: 396px;
                     font-weight: bold;
-                    color: #333;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
                 }
 
                 .list-sing {
-                    color: #999;
-                    font-size: 3.2vw;
+                    margin-top: 4px;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
                 }
             }
         }
@@ -375,9 +422,61 @@ export default defineComponent({
 </style>
 
 <style scoped lang="less">
-@media screen and (min-width: 1267px) {
+@media screen and (max-width: 390px) {
+    /* 样式适用于迷你尺寸的移动设备 */
+    @box-shadow-bgc: #d3e0ec;
     .share-music-list {
-        max-width: 1200px;
+        .music-list {
+            width: 100%;
+            padding: 0;
+            .list-item {
+                padding: 0 12px;
+                height: 60px;
+
+                .list-img {
+                    width: 60px;
+                    height: 60px;
+
+                    img {
+                        width: 100%;
+                    }
+                }
+
+                .list-message {
+                    .list-name {
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+
+        .share-player{
+            width: 100%;
+            .cd-logo {
+                width: 85vw;
+                height: 85vw;
+                max-width: 300px;
+                max-height: 300px;
+            }
+            .player-bar {
+                .bar-left {
+                    .bar-play {
+                        width: 60px;
+                        height: 28px;
+                    }
+                }
+            }
+        }
+    }
+}
+</style>
+
+<style scoped lang="less">
+@media screen and (min-width: 1024px) {
+    @box-shadow-bgc: #d3e0ec;
+    /* 样式适用于大屏幕设备，如桌面电脑 */
+    .share-music-list {
+        max-width: 1024px;
         margin: 0 auto;
         .share-player {
             .cd {
@@ -386,56 +485,74 @@ export default defineComponent({
                 .cd-logo {
                     width: 250px;
                     height: 250px;
-                    margin: 40px 65px 35px 0;
+                    margin: 40px;
                 }
-                .cd-name {
-                    // margin: 7.633vw 0;
-                    padding: 80px 0;
-                    font-size: 31px;
-                }
-            }
-            .player-bar {
-                height: fit-content;
-                flex-direction: column;
-                padding: 0 80px;
-                .bar-left {
-                    width: 100%;
-                    flex-direction: row;
+                .music-info {
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: space-evenly;
+                    .cd-name {
+                        font-size: 30px;
+                    }
+                    .music-size {
+                        font-size: 20px;
+                        margin-top: 10px;
+                    }
+                    .button-play {
+                        width: 60px;
+                        height: 60px;
+                        background: linear-gradient(270deg, #f940a7 0%, #ff86c9 100%);
+                        box-shadow: 5px 3px 6px 0 @box-shadow-bgc,
+                            -3px -3px 6px 0px #ffffff;
+                        border-radius: 30px;
+                        overflow: hidden;
 
-                    .bar-play {
-                        width: 80px;
-                        height: 34px;
-                        border-radius: 10px;
-
-                        img {
-                            width: 24px;
+                        .bar-play-div {
+                            img {
+                                width: 30px;
+                            }
                         }
                     }
+                }
+
+            }
+
+            .player-bar {
+                height: fit-content;
+                display: flex;
+                align-items: center;
+                padding: 0;
+
+                .bar-left {
+                    width: 0%;
+                    height: 40px;
+
+                    .bar-play {
+                        display: none;
+                    }
                     .bar-list-total {
-                        font-size: 18px;
-                        font-weight: normal;
-                        display: block;
-                        margin-left: 20px;
+                        display: none;
                     }
                 }
                 .bar-table {
                     width: 100%;
-                    margin-top: 20px;
                     ul {
                         display: flex;
-                        color: #999;
+                        color: #000;
                         li {
                             display: flex;
                             flex-direction: row;
                             align-items: center;
+                            justify-content: center;
                             height: 50px;
-                            font-size: 1vw;
+                            font-size: 18px;
                             &:nth-child(1) {
                                 flex: 3;
                             }
                             &:nth-child(2),
                             &:nth-child(3) {
-                                flex: 1;
+                                flex: 2;
                             }
                             &:nth-child(4) {
                                 flex: 2;
@@ -447,25 +564,31 @@ export default defineComponent({
         }
         .share-music-list {
             .music-list {
-                height: 50px;
-                .list {
+                max-width: 1024px;
+                .list-item {
                     padding: 0;
-                    height: 100%;
+                    height: 80px;
                     img {
                         display: block;
-                        width: 55px !important;
-                        height: 100%;
+                        width: 80px;
+                        height: 80px;
                         margin-right: 28px;
                     }
                     .list-message {
                         display: flex;
+                        align-items: center;
                         width: 100%;
-                        .list-name,
-                        .list-sing {
-                            font-size: 18px;
-                        }
+
                         .list-name {
-                            width: 445px;
+                            width: 600px;
+                            max-width: 600px;
+                            padding: 0;
+                            margin: 0;
+                        }
+                        .list-sing {
+                            width: 200px;
+                            font-size: 24px;
+                            margin: 0;
                         }
                     }
                 }

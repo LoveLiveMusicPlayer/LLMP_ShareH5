@@ -20,6 +20,7 @@ export interface ILatestPlayingMusic {
 export interface IRootState {
     playInfo: string,
     isAndroid: boolean,
+    isMobile: boolean,
     shareKey: string,
     shareInfo: string,
     isPlaying: boolean;

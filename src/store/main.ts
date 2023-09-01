@@ -33,6 +33,7 @@ export const useStore = defineStore('main', {
             shareInfo: '' as string,
             isPlaying: false as boolean,
             isAndroid: false as boolean,
+            isMobile: false as boolean,
             musicInfo: [] as IMusicInfo[],
             latestPlayingMusic: {} as ILatestPlayingMusic,
         };
@@ -64,6 +65,10 @@ export const useStore = defineStore('main', {
 
         saveIsAndroid(isAndroid: boolean) {
             this.isAndroid = isAndroid;
+        },
+
+        saveIsMobile(isMobile: boolean) {
+            this.isMobile = isMobile;
         },
 
         // * 请求歌单列表数据

@@ -111,7 +111,7 @@ a {
         }
 
         .text {
-            font-size: 20px;
+            font-size: 16px;
             color: #999;
         }
 
@@ -133,14 +133,51 @@ a {
     }
 }
 
-@media screen and (max-height: 700px) {
+@media screen and (max-width: 366px) {
+    .share-affix {
+        .affix-header {
+            .logo {
+                width: 40px;
+                height: 40px;
+                min-height: 40px;
+                min-width: 40px;
+            }
+            .text {
+                font-size: 12px;
+            }
+            .button {
+                width: 70px;
+                max-width: 70px;
+                min-width: 70px;
+                height: 12px;
+                font-size: 12px;
+            }
+        }
+    }
+}
+
+@media screen and (min-height: 700px) and (min-width: 366px) {
     .share-affix {
         .affix-header {
             .text {
-                font-size: 3vh;
+                font-size: 16px;
             }
             .button {
                 height: 5.6vh;
+            }
+        }
+    }
+}
+
+@media screen and (min-height: 700px) and (min-width: 700px) {
+    .share-affix {
+        .affix-header {
+            .text {
+                font-size: 24px;
+            }
+            .button {
+                height: 50px;
+                font-size: 18px;
             }
         }
     }
