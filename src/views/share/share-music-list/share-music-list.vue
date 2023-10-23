@@ -101,12 +101,12 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
-import { useStore } from '@/store/main';
-import { storeToRefs } from 'pinia';
+import {defineComponent, ref} from 'vue';
+import {useStore} from '@/store/main';
+import {storeToRefs} from 'pinia';
 import AudioPlayer from 'components/audio-player/audio-player.vue';
-import { IMusicInfo } from '@/store/types';
-import { ElMessage } from 'element-plus';
+import {IMusicInfo} from '@/store/types';
+import {ElMessage} from 'element-plus';
 
 const LIMIT = 20;
 
@@ -376,7 +376,7 @@ export default defineComponent({
             padding: 0 24px;
             height: 80px;
             display: flex;
-            margin: 12px 0;
+            margin: 12px;
 
             .list-img {
                 flex-shrink: 0;
@@ -399,6 +399,7 @@ export default defineComponent({
                     white-space: nowrap;
                     text-overflow: ellipsis;
                     overflow: hidden;
+                    font-size: 18px;
                 }
 
                 .list-sing {
